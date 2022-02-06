@@ -7,6 +7,7 @@ import base64
 import sys
 import os
 import shutil
+import ast
 
 import paho.mqtt.client as mqtt
 from influxdb import InfluxDBClient
@@ -44,7 +45,7 @@ def save_influx(json_body, body):
     influx_client.write_points(json_body)
 def on_message(client, userdata, msg):
     #current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    timestamp = str(int(time.time()))
+    timestamp = str(time.time())
     #print(msg.topic + ' ' + str(msg.payload))
 
     #sensor_data = _parse_mqtt_message(msg.topic, msg.payload.decode('utf-8'))
@@ -54,17 +55,21 @@ def on_message(client, userdata, msg):
     #splits_ = str(msg.payload).split('XXX')
     #splits_ = str(msg.payload).split('XXX')
     #for i in range(len(splits_)):
+    data = ast.literal_eval(str(msg.payload))
+    data = ast.literal_eval(msg.payload.decode('utf-8'))
     json_body = [
-    {
-        "measurement": "Fares_2",
+        {
+        "measurement": "test_mqtt_time1",
         "tags": {
             "camera_id": camera_id,
         },
-        #"time": timestamp,
         "transmitdelay":transmitdelay,
         "JPGQuality":JPGQuality,
         "fields": {
-            "value": str(msg.payload) #str(msg.payload)
+            "recieved_time": timestamp,
+            "frame_id": data['frame_id'],
+            "sent_time": data['sent_time'],
+            "value": data['value']
         }
     }
     ]
@@ -125,7 +130,7 @@ class Camera():
     def processVideoStream(self, thread=0):
 
 
-            
+
             vidcap = cv2.VideoCapture('black.mp4')
             success, image = vidcap.read ()
             count = 0
@@ -152,7 +157,7 @@ class Camera():
                 success, image = vidcap.read ()
                 print ('Read a new frame: ', success,  ' thread number:', thread)
 
-                timestamp = str(int(time.time()))
+                timestamp = str(time.time())
                 frame_id = timestamp+str(count)
                 end = time.time()
                 runtime_seconds = end - start
@@ -164,7 +169,10 @@ class Camera():
                 list_image_base64_str += str(image_base64)+'XXX'
                 image_base64_last = str(image_base64)
 
-
+                json = {}
+                json['frame_id'] = str(frame_id)
+                json['sent_time'] = timestamp
+                json['value'] = str(image_base64)
                 cname = "Client" + str(count)
                 client = mqtt.Client(cname)
 
@@ -173,7 +181,7 @@ class Camera():
                 client.connect(os.getenv('MQTT_SERVER_IP'), int(os.getenv('MQTT_SERVER_PORT')), 60)
                 client.subscribe("topic", qos=1)
 
-                client.publish(topic="topic", payload=str(image_base64), qos=1, retain=False)
+                client.publish(topic="topic", payload=str(json), qos=1, retain=False)
                 #client.loop_forever()
                 client.loop_start()
                 time.sleep(1)
