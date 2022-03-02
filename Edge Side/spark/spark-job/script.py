@@ -21,6 +21,8 @@ def save_influx(jsondata_body, body):
     print(" Saving data of : ", sys.getsizeof(str(body)), ' bytes')
     jsondata_body[0]["fields"]["beforeInfluxDB"] = str(time.time())
     influx_client.write_points(jsondata_body)
+    jsondata_body[0]["fields"]["afterInfluxDB"] = str(time.time())
+
 INFLUXDB_DATABASE = os.getenv('INFLUXDB_DATABASE_NAME')
 
 influx_client = InfluxDBClient(os.getenv('INFLUXDB_DATABASE_IP'), os.getenv('INFLUXDB_DATABASE_PORT'), database=INFLUXDB_DATABASE)
@@ -68,7 +70,7 @@ mqttStream = mqttStream \
 def printSomething(beforesparktime, rdd):
     c = rdd.collect()
     print("-------------------------------------------")
-    print("Time: %s" % time)
+    print("Time: %s" % beforesparktime)
     print("-------------------------------------------")
     
     for record in c:
