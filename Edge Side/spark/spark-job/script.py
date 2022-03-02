@@ -26,10 +26,8 @@ influx_client = InfluxDBClient(os.getenv('INFLUXDB_DATABASE_IP'), os.getenv('INF
 
 _init_influxdb_database()
 
-def on_RDD(msg):
+def on_RDD(data):
 
-    data = ast.literal_eval(str(msg))
-    data = ast.literal_eval(msg.decode('utf-8'))
     jsondata_body = [
         {
         "measurement": "t_spark_test1",
