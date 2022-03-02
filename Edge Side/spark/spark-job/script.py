@@ -31,11 +31,11 @@ def on_RDD(data):
     jsondata_body = [
         {
         "measurement": "t_spark_test1",
-       # "tags": {
-      #      "camera_id": camera_id,
-      #  },
-      #  "transmitdelay":transmitdelay,
-       # "JPGQuality":JPGQuality,
+        "tags": {
+            "camera_id": data['camera_id'],
+        },
+        "transmitdelay":data['transmitdelay'],
+       "JPGQuality":data['JPGQuality'],
         "fields": {
         #    "recieved_time": timestamp,
             "frame_id": data['frame_id'],
