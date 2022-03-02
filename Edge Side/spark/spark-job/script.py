@@ -28,8 +28,8 @@ _init_influxdb_database()
 
 def on_RDD(msg):
 
-    data = ast.literal_eval(str(msg.payload))
-    data = ast.literal_eval(msg.payload.decode('utf-8'))
+    data = ast.literal_eval(str(msg))
+    data = ast.literal_eval(msg.decode('utf-8'))
     jsondata_body = [
         {
         "measurement": "t_spark_test1",
@@ -46,7 +46,7 @@ def on_RDD(msg):
         }
     }
     ]
-    save_influx(jsondata_body, str(msg.payload))
+    save_influx(jsondata_body, str(msg))
 
 
 
