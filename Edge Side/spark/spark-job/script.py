@@ -44,7 +44,7 @@ def on_RDD(data):
         }
     }
     ]
-    save_influx(jsondata_body, str(msg))
+    save_influx(jsondata_body, str(data))
 
 
 
