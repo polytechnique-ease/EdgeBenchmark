@@ -75,7 +75,7 @@ def printSomething(time, rdd):
     
     for record in c:
         # "draw" our lil' ASCII-based histogram
-        on_RDD(record,time)
+        on_RDD(record,str(time))
     print("")
     
 mqttStream.foreachRDD(printSomething)
