@@ -171,6 +171,9 @@ class Camera():
 
                 jsondata = {}
                 jsondata['size'] =  os.stat(imageFileNameandPath).st_size
+                jsondata['camera_id'] =  234
+                jsondata['transmitdelay'] =  transmitdelay
+                jsondata['JPGQuality'] =  JPGQuality
                 jsondata['count'] =  count
                 jsondata['frame_id'] = str(frame_id)
                 jsondata['sent_time'] = timestamp
