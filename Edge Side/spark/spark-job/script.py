@@ -1,5 +1,5 @@
 import json
-from time import time
+import time
 from pyspark import SparkContext
 from pyspark.streaming import StreamingContext
 from mqtt import MQTTUtils
@@ -66,7 +66,7 @@ mqttStream = mqttStream \
    .filter(lambda message: ((message['size'] < 148000) and (message['size'] > 141000)))
 
       
-def printSomething(time, rdd):
+def printSomething(beforesparktime, rdd):
     c = rdd.collect()
     print("-------------------------------------------")
     print("Time: %s" % time)
@@ -74,7 +74,7 @@ def printSomething(time, rdd):
     
     for record in c:
         # "draw" our lil' ASCII-based histogram
-        on_RDD(record,str(time.timestamp()))
+        on_RDD(record,str(beforesparktime.timestamp()))
     print("")
     
 mqttStream.foreachRDD(printSomething)
