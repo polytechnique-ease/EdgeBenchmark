@@ -38,9 +38,9 @@ def on_RDD(data,recieved_time):
         "transmitdelay":data['transmitdelay'],
        "JPGQuality":data['JPGQuality'],
         "fields": {
-            "recieved_time": recieved_time,
+            "beforeSpark_time": recieved_time,
             "frame_id": data['frame_id'],
-            "sent_time": data['sent_time'],
+            "FromSensor_time": data['sent_time'],
             "value": data['value']
         }
     }
@@ -75,7 +75,7 @@ def printSomething(time, rdd):
     
     for record in c:
         # "draw" our lil' ASCII-based histogram
-        on_RDD(record,str(time))
+        on_RDD(record,str(time.timestamp()))
     print("")
     
 mqttStream.foreachRDD(printSomething)
