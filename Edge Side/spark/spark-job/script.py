@@ -1,4 +1,5 @@
 import json
+from time import time
 from pyspark import SparkContext
 from pyspark.streaming import StreamingContext
 from mqtt import MQTTUtils
@@ -26,7 +27,7 @@ influx_client = InfluxDBClient(os.getenv('INFLUXDB_DATABASE_IP'), os.getenv('INF
 
 _init_influxdb_database()
 
-def on_RDD(data):
+def on_RDD(data,recieved_time):
 
     jsondata_body = [
         {
@@ -37,7 +38,7 @@ def on_RDD(data):
         "transmitdelay":data['transmitdelay'],
        "JPGQuality":data['JPGQuality'],
         "fields": {
-        #    "recieved_time": timestamp,
+            "recieved_time": recieved_time,
             "frame_id": data['frame_id'],
             "sent_time": data['sent_time'],
             "value": data['value']
@@ -74,7 +75,7 @@ def printSomething(time, rdd):
     
     for record in c:
         # "draw" our lil' ASCII-based histogram
-        on_RDD(record)
+        on_RDD(record,time)
     print("")
     
 mqttStream.foreachRDD(printSomething)
