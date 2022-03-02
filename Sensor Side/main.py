@@ -22,6 +22,11 @@ from dotenv import load_dotenv
 
 load_dotenv("sensor-variables.env")
 
+camera_id = os.getenv('CAMERA_ID') # sys.argv[1]  # 123
+destination_cluster_ip = os.getenv('DESTINATION_CLUSTER_IP') #sys.argv[2]  # '132.207.170.59'
+#JPGQuality = os.getenv('JPGQUALITY')#int(sys.argv[3] ) # 20
+JPGQuality = int(os.getenv('JPGQUALITY'))
+transmitdelay = os.getenv('TRANSMITDELAY') # int(sys.argv[4])  # 10
 
 log = logging.getLogger()
 log.setLevel('DEBUG')
@@ -171,7 +176,7 @@ class Camera():
 
                 jsondata = {}
                 jsondata['size'] =  os.stat(imageFileNameandPath).st_size
-                jsondata['camera_id'] =  234
+                jsondata['camera_id'] =  camera_id
                 jsondata['transmitdelay'] =  transmitdelay
                 jsondata['JPGQuality'] =  JPGQuality
                 jsondata['count'] =  count
@@ -214,11 +219,7 @@ class Camera():
             str = base64.b64encode(imageFile.read())
         return str
 
-camera_id = os.getenv('CAMERA_ID') # sys.argv[1]  # 123
-destination_cluster_ip = os.getenv('DESTINATION_CLUSTER_IP') #sys.argv[2]  # '132.207.170.59'
-#JPGQuality = os.getenv('JPGQUALITY')#int(sys.argv[3] ) # 20
-JPGQuality = int(os.getenv('JPGQUALITY'))
-transmitdelay = os.getenv('TRANSMITDELAY') # int(sys.argv[4])  # 10
+
 
 check_looping = 0
 
