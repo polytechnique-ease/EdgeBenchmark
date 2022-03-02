@@ -2,6 +2,53 @@ import json
 from pyspark import SparkContext
 from pyspark.streaming import StreamingContext
 from mqtt import MQTTUtils
+import ast , os 
+from influxdb import InfluxDBClient
+from dotenv import load_dotenv
+
+
+load_dotenv("spark-variables.env")
+
+def _init_influxdb_database():
+    databases = influx_client.get_list_database()
+    if len(list(filter(lambda x: x['name'] == INFLUXDB_DATABASE, databases))) == 0:
+        influx_client.create_database(INFLUXDB_DATABASE)
+    influx_client.switch_database(INFLUXDB_DATABASE)
+
+# The callback for when a PUBLISH message is received from the server.
+def save_influx(jsondata_body, body):
+    print(" Saving data of : ", sys.getsizeof(str(body)), ' bytes')
+    influx_client.write_points(jsondata_body)
+INFLUXDB_DATABASE = os.getenv('INFLUXDB_DATABASE_NAME')
+
+influx_client = InfluxDBClient(os.getenv('INFLUXDB_DATABASE_IP'), os.getenv('INFLUXDB_DATABASE_PORT'), database=INFLUXDB_DATABASE)
+
+
+_init_influxdb_database()
+
+def on_RDD(msg):
+
+    data = ast.literal_eval(str(msg.payload))
+    data = ast.literal_eval(msg.payload.decode('utf-8'))
+    jsondata_body = [
+        {
+        "measurement": "t_spark_test1",
+       # "tags": {
+      #      "camera_id": camera_id,
+      #  },
+      #  "transmitdelay":transmitdelay,
+       # "JPGQuality":JPGQuality,
+        "fields": {
+        #    "recieved_time": timestamp,
+            "frame_id": data['frame_id'],
+            "sent_time": data['sent_time'],
+            "value": data['value']
+        }
+    }
+    ]
+    save_influx(jsondata_body, str(msg.payload))
+
+
 
 sc = SparkContext(appName="sensors")
 sc.setLogLevel("ERROR")
@@ -20,6 +67,7 @@ mqttStream = mqttStream.map(lambda js: json.loads(js))
 mqttStream = mqttStream \
    .filter(lambda message: ((message['size'] < 148000) and (message['size'] > 141000)))
 
+      
 def printSomething(time, rdd):
     c = rdd.collect()
     print("-------------------------------------------")
@@ -28,7 +76,7 @@ def printSomething(time, rdd):
     
     for record in c:
         # "draw" our lil' ASCII-based histogram
-        print(record['count'])
+        on_RDD(record)
     print("")
     
 mqttStream.foreachRDD(printSomething)

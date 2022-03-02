@@ -73,7 +73,7 @@ def on_message(client, userdata, msg):
         }
     }
     ]
-    save_influx(jsondata_body, str(msg.payload))
+    #save_influx(jsondata_body, str(msg.payload))
     #print(msg.topic, str(msg.payload))
     #thinktime or sleep aftersending
 
