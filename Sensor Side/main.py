@@ -40,9 +40,9 @@ def on_connect(client, userdata, flags, rc):
     print('Connected with result code ' + str(rc))
     client.subscribe('topic')
 # The callback for when a PUBLISH message is received from the server.
-def save_influx(json_body, body):
+def save_influx(jsondata_body, body):
     print(" Saving data of : ", sys.getsizeof(str(body)), ' bytes')
-    influx_client.write_points(json_body)
+    influx_client.write_points(jsondata_body)
 def on_message(client, userdata, msg):
     #current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     timestamp = str(time.time())
@@ -57,9 +57,9 @@ def on_message(client, userdata, msg):
     #for i in range(len(splits_)):
     data = ast.literal_eval(str(msg.payload))
     data = ast.literal_eval(msg.payload.decode('utf-8'))
-    json_body = [
+    jsondata_body = [
         {
-        "measurement": "test_mqtt_time1",
+        "measurement": "t_spark_test1",
         "tags": {
             "camera_id": camera_id,
         },
@@ -73,7 +73,7 @@ def on_message(client, userdata, msg):
         }
     }
     ]
-    save_influx(json_body, str(msg.payload))
+    save_influx(jsondata_body, str(msg.payload))
     #print(msg.topic, str(msg.payload))
     #thinktime or sleep aftersending
 
@@ -169,19 +169,28 @@ class Camera():
                 list_image_base64_str += str(image_base64)+'XXX'
                 image_base64_last = str(image_base64)
 
-                json = {}
-                json['frame_id'] = str(frame_id)
-                json['sent_time'] = timestamp
-                json['value'] = str(image_base64)
+                jsondata = {}
+                jsondata['size'] =  os.stat(imageFileNameandPath).st_size
+                jsondata['count'] =  count
+                jsondata['frame_id'] = str(frame_id)
+                jsondata['sent_time'] = timestamp
+                jsondata['value'] = str(image_base64)
                 cname = "Client" + str(count)
                 client = mqtt.Client(cname)
 
                 client.on_connect = on_connect
                 client.on_message = on_message
                 client.connect(os.getenv('MQTT_SERVER_IP'), int(os.getenv('MQTT_SERVER_PORT')), 60)
-                client.subscribe("topic", qos=1)
+                #client.subscribe("topic", qos=1)
 
-                client.publish(topic="topic", payload=str(json), qos=1, retain=False)
+                #client.subscribe("topic", qos=1)
+                #test = {}
+                #test['count'] = str(count)
+                #client.publish(topic="topic", payload=str(count), qos=1, retain=False)
+                
+                #client.publish(topic="topic", payload=str(jsondata), qos=1, retain=False)
+
+                client.publish(topic="topic", payload=json.dumps(jsondata), qos=1, retain=False)
                 #client.loop_forever()
                 client.loop_start()
                 time.sleep(1)
