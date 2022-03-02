@@ -19,6 +19,7 @@ def _init_influxdb_database():
 # The callback for when a PUBLISH message is received from the server.
 def save_influx(jsondata_body, body):
     print(" Saving data of : ", sys.getsizeof(str(body)), ' bytes')
+    jsondata_body["fields"]["beforeInfluxDB"] = str(time.time())
     influx_client.write_points(jsondata_body)
 INFLUXDB_DATABASE = os.getenv('INFLUXDB_DATABASE_NAME')
 
@@ -29,8 +30,7 @@ _init_influxdb_database()
 
 def on_RDD(data,recieved_time):
 
-    jsondata_body = [
-        {
+    jsondata_body = {
         "measurement": "t_spark_test1",
         "tags": {
             "camera_id": data['camera_id'],
@@ -44,7 +44,6 @@ def on_RDD(data,recieved_time):
             "value": data['value']
         }
     }
-    ]
     save_influx(jsondata_body, str(data))
 
 
