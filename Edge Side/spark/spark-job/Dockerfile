@@ -6,10 +6,8 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN apt-get update
 
-RUN apt-get install -y default-jdk scala git wget software-properties-common
-RUN add-apt-repository ppa:deadsnakes/ppa 
-RUN apt-get update
-RUN apt-get install python3.8
+RUN apt-get install -y default-jdk scala git wget python3.8
+
 RUN wget https://archive.apache.org/dist/spark/spark-3.2.1/spark-3.2.1-bin-hadoop3.2.tgz
 RUN tar xvf spark-*
 RUN mv spark-3.2.1-bin-hadoop3.2 /opt/spark
