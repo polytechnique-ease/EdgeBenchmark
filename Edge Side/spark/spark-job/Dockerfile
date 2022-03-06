@@ -11,7 +11,7 @@ RUN apt install python3.8
 
 RUN apt-get update
 
-RUN apt-get install -y default-jdk scala git wget python3.8
+RUN apt-get install -y default-jdk scala git wget
 
 RUN wget https://archive.apache.org/dist/spark/spark-3.2.1/spark-3.2.1-bin-hadoop3.2.tgz
 RUN tar xvf spark-*
