@@ -22,5 +22,4 @@ RUN export PYSPARK_PYTHON=/usr/bin/python3
 RUN . ~/.profile
 
 ENV PATH $PATH:/opt/spark/bin:/opt/spark/sbin
-ENTRYPOINT tail -f /dev/null
-
+ENTRYPOINT ["tail", "-f", "/dev/null"]
