@@ -4,11 +4,9 @@ ENV TZ=America/Toronto
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-
 RUN apt-get update
 
 RUN apt-get install -y default-jdk scala git wget
-
 RUN wget https://archive.apache.org/dist/spark/spark-3.2.1/spark-3.2.1-bin-hadoop3.2.tgz
 RUN tar xvf spark-*
 RUN mv spark-3.2.1-bin-hadoop3.2 /opt/spark
@@ -22,7 +20,7 @@ RUN export PATH=$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin
 RUN export PYSPARK_PYTHON=/usr/bin/python3
 
 RUN . ~/.profile
-COPY script.py /script.py 
+
 ENV PATH $PATH:/opt/spark/bin:/opt/spark/sbin
-#ENTRYPOINT spark-submit --packages org.apache.bahir:spark-streaming-mqtt_2.11:2.4.0 script.py
-ENTRYPOINT tail -f /dev/null
+ENTRYPOINT start-worker.sh spark://$MASTER_IP:$MASTER_PORT && tail -f /dev/null
+
