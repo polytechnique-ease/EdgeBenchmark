@@ -3,6 +3,11 @@ FROM arm32v7/ubuntu
 ENV TZ=America/Toronto
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN apt update
+RUN apt install software-properties-common
+RUN sudo add-apt-repository ppa:deadsnakes/ppa
+RUN sudo apt update
+RUN apt install python3.8
 
 RUN apt-get update
 
