@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y default-jdk scala git wget software-pro
 RUN add-apt-repository -y ppa:deadsnakes/ppa
 RUN apt-get update
 RUN apt-get install -y python3.8
-RUN pip install docker influxdb pytz
+RUN pip3 install docker influxdb pytz
 
 COPY monitoring.py /monitoring.py
 ENTRYPOINT python3 /monitoring.py && tail -f /dev/null
