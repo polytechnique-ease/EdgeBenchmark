@@ -8,6 +8,7 @@ from influxdb import InfluxDBClient
 from dotenv import load_dotenv
 import sys
 
+load_dotenv("spark-variables.env")
 
 def _init_influxdb_database():
     databases = influx_client.get_list_database()
@@ -24,7 +25,7 @@ def save_influx(jsondata_body, body):
 
 INFLUXDB_DATABASE = os.getenv('INFLUXDB_DATABASE_NAME')
 
-influx_client = InfluxDBClient(os.getenv('INFLUXDB_IP'), os.getenv('INFLUXDB_PORT'), database=INFLUXDB_DATABASE)
+influx_client = InfluxDBClient(os.getenv('INFLUXDB_DATABASE_IP'), os.getenv('INFLUXDB_DATABASE_PORT'), database=INFLUXDB_DATABASE)
 
 
 _init_influxdb_database()
