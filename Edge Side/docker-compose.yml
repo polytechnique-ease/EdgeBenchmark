@@ -19,7 +19,7 @@ services:
     volumes:
     - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
   sparkmaster: 
-    image: mahsa/master
+    image: mahsa/spark-master
     container_name: sparkmaster
     restart: always
     env_file:
@@ -28,7 +28,7 @@ services:
       - "8080:8080"
       - "7077:7077"
   sparkworker: 
-    image: mahsa/slave
+    image: mahsa/spark-worker
     container_name: sparkworker
     restart: always
     depends_on:
