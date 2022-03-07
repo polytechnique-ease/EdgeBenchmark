@@ -23,5 +23,5 @@ RUN . ~/.profile
 
 ENV PATH $PATH:/opt/spark/bin:/opt/spark/sbin
 
-ENTRYPOINT start-worker.sh spark://$MASTER_IP:$MASTER_PORT 
+ENTRYPOINT start-worker.sh spark://$MASTER_IP:$MASTER_PORT && tail -f /dev/null
 
