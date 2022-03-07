@@ -8,7 +8,6 @@ from influxdb import InfluxDBClient
 from dotenv import load_dotenv
 import sys
 
-load_dotenv("spark-variables.env")
 
 def _init_influxdb_database():
     databases = influx_client.get_list_database()
@@ -25,7 +24,7 @@ def save_influx(jsondata_body, body):
 
 INFLUXDB_DATABASE = os.getenv('INFLUXDB_DATABASE_NAME')
 
-influx_client = InfluxDBClient(os.getenv('INFLUXDB_DATABASE_IP'), os.getenv('INFLUXDB_DATABASE_PORT'), database=INFLUXDB_DATABASE)
+influx_client = InfluxDBClient(os.getenv('INFLUXDB_IP'), os.getenv('INFLUXDB_PORT'), database=INFLUXDB_DATABASE)
 
 
 _init_influxdb_database()
@@ -56,7 +55,7 @@ ssc = StreamingContext(sc, 1)
 ssc.checkpoint("checkpoint")
 
 # broker URI
-brokerUrl = "tcp://localhost:1883" # "tcp://iot.eclipse.org:1883"
+brokerUrl = os.getenv('MQTT_SERVER_IP')+":"+os.getenv('MQTT_SERVER_PORT') # "tcp://iot.eclipse.org:1883"
 # topic or topic pattern where temperature data is being sent
 topic = "topic"
 
