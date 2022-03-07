@@ -13,7 +13,6 @@ import json
 import requests
 
 
-load_dotenv()
 load_dotenv("edge-variables.env")
 
 
