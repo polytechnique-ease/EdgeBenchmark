@@ -8,7 +8,7 @@ from influxdb import InfluxDBClient
 from dotenv import load_dotenv
 import sys
 
-load_dotenv("spark-variables.env")
+load_dotenv("edge-variables.env")
 
 def _init_influxdb_database():
     databases = influx_client.get_list_database()
