@@ -35,7 +35,14 @@ services:
       - sparkmaster
     env_file:
       - edge-variables.env
-
+  sparkjob: 
+    image: mahsahadian/spark-job
+    container_name: sparkjob
+    restart: always
+    depends_on:
+      - sparkworker
+    env_file:
+      - edge-variables.env
 
 
 
