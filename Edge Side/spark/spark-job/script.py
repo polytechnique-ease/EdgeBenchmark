@@ -5,7 +5,6 @@ from pyspark.streaming import StreamingContext
 from mqtt import MQTTUtils
 import ast , os 
 from influxdb import InfluxDBClient
-from dotenv import load_dotenv
 import sys
 
 
