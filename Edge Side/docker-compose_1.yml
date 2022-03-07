@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    env_file:
+      - edge-variables.env
+    container_name: mosquitto
+    restart: always
+    ports:
+      - "1883:1883"
+    command: mosquitto -c /mosquitto-no-auth.conf
+  telegraf: 
+    image: telegraf
+    env_file:
+      - edge-variables.env
+    container_name: telegraf
+    restart: always
+    volumes:
+    - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
+  sparkmaster: 
+    image: mahsa/master
+    container_name: sparkmaster
+    restart: always
+    ports:
+      - "8080:8080"
+      - "7077:7077"
+  sparkworker: 
+    image: mahsa/slave
+    container_name: sparkworker
+    restart: always
+    depends_on:
+      - sparkmaster
+    env_file:
+      - edge-variables.env
+
+
+
