@@ -23,5 +23,5 @@ RUN . ~/.profile
 
 ENV PATH $PATH:/opt/spark/bin:/opt/spark/sbin
 
-ENTRYPOINT [start-worker.sh,“spark://132.207.170.59:7077”]
+ENTRYPOINT [ "tail ","-f" ,"/dev/null"]
 
