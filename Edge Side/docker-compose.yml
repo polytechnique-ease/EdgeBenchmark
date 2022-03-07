@@ -18,3 +18,23 @@ services:
     restart: always
     volumes:
     - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
+  sparkmaster: 
+    image: mahsa/master
+    container_name: sparkmaster
+    restart: always
+    env_file:
+      - edge-variables.env
+    ports:
+      - "8080:8080"
+      - "7077:7077"
+  sparkworker: 
+    image: mahsa/slave
+    container_name: sparkworker
+    restart: always
+    depends_on:
+      - sparkmaster
+    env_file:
+      - edge-variables.env
+
+
+
