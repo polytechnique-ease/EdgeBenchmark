@@ -24,7 +24,7 @@ def save_influx(jsondata_body, body):
 
 INFLUXDB_DATABASE = os.getenv('INFLUXDB_DATABASE_NAME')
 
-influx_client = InfluxDBClient(os.getenv('INFLUXDB_IP'), str(os.getenv('INFLUXDB_PORT')), database=INFLUXDB_DATABASE)
+influx_client = InfluxDBClient(os.getenv('INFLUXDB_IP'), os.getenv('INFLUXDB_PORT'), database=INFLUXDB_DATABASE)
 
 
 _init_influxdb_database()
@@ -71,7 +71,6 @@ def printSomething(beforesparktime, rdd):
     print("-------------------------------------------")
     print("Time: %s" % beforesparktime)
     print("-------------------------------------------")
-    print(os.getenv('INFLUXDB_IP'))
     
     for record in c:
         # "draw" our lil' ASCII-based histogram
