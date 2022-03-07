@@ -43,6 +43,3 @@ services:
       - sparkworker
     env_file:
       - edge-variables.env
-
-
-
