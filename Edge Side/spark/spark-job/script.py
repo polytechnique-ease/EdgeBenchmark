@@ -8,7 +8,6 @@ from influxdb import InfluxDBClient
 from dotenv import load_dotenv
 import sys
 
-load_dotenv("edge-variables.env")
 
 def _init_influxdb_database():
     databases = influx_client.get_list_database()
@@ -72,6 +71,7 @@ def printSomething(beforesparktime, rdd):
     print("-------------------------------------------")
     print("Time: %s" % beforesparktime)
     print("-------------------------------------------")
+    print(os.getenv('INFLUXDB_IP'))
     
     for record in c:
         # "draw" our lil' ASCII-based histogram
