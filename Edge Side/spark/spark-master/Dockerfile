@@ -22,4 +22,4 @@ RUN export PYSPARK_PYTHON=/usr/bin/python3
 RUN . ~/.profile
 
 ENV PATH $PATH:/opt/spark/bin:/opt/spark/sbin
-ENTRYPOINT start-master.sh && tail -f /dev/null
+ENTRYPOINT start-master.sh
