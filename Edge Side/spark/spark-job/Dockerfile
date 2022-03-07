@@ -1,4 +1,4 @@
-#Spark worker
+#Spark JOB
 FROM arm32v7/ubuntu
 ENV TZ=America/Toronto
 
@@ -7,7 +7,8 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN apt-get update && apt-get install -y default-jdk scala git wget software-properties-common
 RUN add-apt-repository -y ppa:deadsnakes/ppa
 RUN apt-get update
-RUN apt-get install -y python3.8
+RUN apt-get install -y python3.8 python3-pip
+RUN pip3 install  influxdb  python-dotenv
 
 
 
@@ -26,6 +27,7 @@ RUN export PYSPARK_PYTHON=/usr/bin/python3
 RUN . ~/.profile
 
 ENV PATH $PATH:/opt/spark/bin:/opt/spark/sbin
+
 COPY script.py /script.py
 
 ENTRYPOINT spark-submit --packages org.apache.bahir:spark-streaming-mqtt_2.11:2.4.0 script.py
