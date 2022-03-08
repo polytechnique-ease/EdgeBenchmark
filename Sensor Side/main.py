@@ -10,7 +10,6 @@ import shutil
 import ast
 
 import paho.mqtt.client as mqtt
-from influxdb import InfluxDBClient
 import datetime
 import sys
 import re
@@ -23,7 +22,6 @@ from dotenv import load_dotenv
 load_dotenv("sensor-variables.env")
 
 camera_id = os.getenv('CAMERA_ID') # sys.argv[1]  # 123
-destination_cluster_ip = os.getenv('DESTINATION_CLUSTER_IP') #sys.argv[2]  # '132.207.170.59'
 #JPGQuality = os.getenv('JPGQUALITY')#int(sys.argv[3] ) # 20
 JPGQuality = int(os.getenv('JPGQUALITY'))
 transmitdelay = os.getenv('TRANSMITDELAY') # int(sys.argv[4])  # 10
@@ -45,9 +43,6 @@ def on_connect(client, userdata, flags, rc):
     print('Connected with result code ' + str(rc))
     client.subscribe('topic')
 # The callback for when a PUBLISH message is received from the server.
-def save_influx(jsondata_body, body):
-    print(" Saving data of : ", sys.getsizeof(str(body)), ' bytes')
-    influx_client.write_points(jsondata_body)
 def on_message(client, userdata, msg):
     #current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     timestamp = str(time.time())
@@ -97,19 +92,13 @@ def on_message(client, userdata, msg):
     #    camera = Camera(camera_id, destination_cluster_ip, JPGQuality, transmitdelay, './imagesout')
     #    camera.processVideoStream()
 
-def _init_influxdb_database():
-    databases = influx_client.get_list_database()
-    if len(list(filter(lambda x: x['name'] == INFLUXDB_DATABASE, databases))) == 0:
-        influx_client.create_database(INFLUXDB_DATABASE)
-    influx_client.switch_database(INFLUXDB_DATABASE)
 
 def myconverter(o):
     if isinstance(o, datetime.datetime):
         return o.__str__()
 class Camera():
-    def __init__(self,camera_id,destination_cluster_ip,JPGQuality,transmitdelay, folder):
+    def __init__(self,camera_id,JPGQuality,transmitdelay, folder):
         self.camera_id = camera_id
-        self.destination_cluster_ip = destination_cluster_ip
         self.JPGQuality = JPGQuality
         self.transmitdelay = transmitdelay
         start = time.time()
@@ -223,12 +212,9 @@ class Camera():
 
 check_looping = 0
 
-INFLUXDB_DATABASE = os.getenv('INFLUXDB_DATABASE_NAME')
-influx_client = InfluxDBClient(os.getenv('INFLUXDB_DATABASE_IP'), os.getenv('INFLUXDB_DATABASE_PORT'), database=INFLUXDB_DATABASE)
-_init_influxdb_database()
 
 
 
 #while True:
-camera = Camera(camera_id, destination_cluster_ip, JPGQuality, transmitdelay, './imagesout')
+camera = Camera(camera_id, JPGQuality, transmitdelay, './imagesout')
 camera.processVideoStream()
