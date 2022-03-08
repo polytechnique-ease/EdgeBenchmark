@@ -5,4 +5,4 @@ Run the command to install the Influxdb and Grafana
 sudo docker run -d -p 8086:8086 
      -v influxdb_MSR:/var/lib/influxdb --name influxdb_MSR influxdb
 
-docker run -v influxdb_MSR:/var/lib/influxdb --name=influxdb_MSR -p 8087:8086  --env-file db-variables.env influxdb:latest
+sudo docker run -d -p 8086:8086 -v influxdb_Log:/var/lib/influxdb --name influxdb_Log influxdb:1.8.3
