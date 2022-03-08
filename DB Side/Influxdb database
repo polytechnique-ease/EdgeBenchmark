@@ -5,5 +5,5 @@ Run the command to install the Influxdb and Grafana
 sudo docker run -d -p 8086:8086 
      -v influxdb_MSR:/var/lib/influxdb --name influxdb_MSR influxdb
 
-sudo docker run -d -p 8087:8086 
-     -v influxDB_Log:/var/lib/influxdb --name InfluxDB_Log INFLUXDB_DB=sensorslog -e INFLUXDB_HTTP_AUTH_ENABLED=true -e INFLUXDB_ADMIN_USER=dbroot -e INFLUXDB_ADMIN_PASSWORD=rootroot influxdb
+sudo docker run -d -p 8087:8086 influxdb
+     -v influxDB_Log:/var/lib/influxdb --name InfluxDB_Log INFLUXDB_DB=sensorslog -e INFLUXDB_HTTP_AUTH_ENABLED=true -e INFLUXDB_ADMIN_USER=dbroot -e INFLUXDB_ADMIN_PASSWORD=rootroot 
