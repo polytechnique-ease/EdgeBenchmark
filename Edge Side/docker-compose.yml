@@ -35,11 +35,3 @@ services:
       - sparkworker
     env_file:
       - edge-variables.env
-  monitoring: 
-    image: mahsahadian/monitoring
-    container_name: monitoring
-    restart: always
-    depends_on:
-      - sparkworker
-    env_file:
-      - edge-variables.env
