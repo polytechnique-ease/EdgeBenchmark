@@ -80,5 +80,5 @@ mqttStream.foreachRDD(printSomething)
 
 
 ssc.start()
-ssc.awaitTerminationOrTimeout(180)
+ssc.awaitTerminationOrTimeout(60)
 ssc.stop()
