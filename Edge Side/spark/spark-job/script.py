@@ -66,15 +66,16 @@ mqttStream = mqttStream \
 
       
 def printSomething(beforesparktime, rdd):
-    c = rdd.collect()
-    print("-------------------------------------------")
-    print("Time: %s" % beforesparktime)
-    print("-------------------------------------------")
-    
-    for record in c:
-        # "draw" our lil' ASCII-based histogram
-        on_RDD(record,str(beforesparktime.timestamp()))
-    print("")
+    if(not rdd.isEmpty()):
+        c = rdd.collect()
+        print("-------------------------------------------")
+        print("Time: %s" % beforesparktime)
+        print("-------------------------------------------")
+        
+        for record in c:
+            # "draw" our lil' ASCII-based histogram
+            on_RDD(record,str(beforesparktime.timestamp()))
+        print("")
     
 mqttStream.foreachRDD(printSomething)
 
