@@ -66,8 +66,9 @@ mqttStream = mqttStream \
 
       
 def printSomething(beforesparktime, rdd):
-    if(not rdd.isEmpty()):
-        c = rdd.collect()
+    
+    c = rdd.collect()
+    if(not len(c) > 0):
         print("-------------------------------------------")
         print("Time: %s" % beforesparktime)
         print("-------------------------------------------")
