@@ -97,7 +97,7 @@ class Camera():
 
             client.on_connect = on_connect
             client.connect(os.getenv('MQTT_SERVER_IP'), int(os.getenv('MQTT_SERVER_PORT')), 60)
-
+            client.loop_start()
             while success:
                 #for i in range(9):
                 #self.JPGQuality = i + 1
@@ -136,7 +136,7 @@ class Camera():
 
                 print('Experiment Runtime (seconds): ' + str(int(runtime_seconds)))
                 print('Images written per (second): ' + str(count/runtime_seconds))
-
+            client.loop_stop()
             client.disconnect()
             self.cleanup()
 
