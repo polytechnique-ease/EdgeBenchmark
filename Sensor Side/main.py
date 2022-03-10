@@ -41,7 +41,6 @@ print('Hello 1')
 def on_connect(client, userdata, flags, rc):
     """ The callback for when the client receives a CONNACK response from the server."""
     print('Connected with result code ' + str(rc))
-    client.subscribe('topic')
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
     #current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -142,6 +141,13 @@ class Camera():
 
             list_image_base64_str = ''
             image_base64_last = ''
+            cname = "Client" + self.camera_id
+            client = mqtt.Client(cname)
+
+            client.on_connect = on_connect
+            client.on_message = on_message
+            client.connect(os.getenv('MQTT_SERVER_IP'), int(os.getenv('MQTT_SERVER_PORT')), 60)
+
             while success:
                 #for i in range(9):
                 #self.JPGQuality = i + 1
@@ -172,12 +178,6 @@ class Camera():
                 jsondata['frame_id'] = str(frame_id)
                 jsondata['sent_time'] = timestamp
                 jsondata['value'] = str(image_base64)
-                cname = "Client" + str(count)
-                client = mqtt.Client(cname)
-
-                client.on_connect = on_connect
-                client.on_message = on_message
-                client.connect(os.getenv('MQTT_SERVER_IP'), int(os.getenv('MQTT_SERVER_PORT')), 60)
                 #client.subscribe("topic", qos=1)
 
                 #client.subscribe("topic", qos=1)
@@ -189,7 +189,7 @@ class Camera():
 
                 client.publish(topic="topic", payload=json.dumps(jsondata), qos=1, retain=False)
                 #client.loop_forever()
-                client.loop_start()
+                #client.loop_start()
                 time.sleep(1)
                 #list_image_base64_str = ''
                 #print(count)
