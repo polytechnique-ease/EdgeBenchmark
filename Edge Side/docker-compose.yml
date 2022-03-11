@@ -34,3 +34,9 @@ services:
       - sparkworker
     env_file:
       - edge-variables.env
+    deploy:
+      resources:
+        limits:
+          memory: 5G
+        reservations:
+          memory: 1G
