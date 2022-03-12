@@ -6,6 +6,7 @@ from mqtt import MQTTUtils
 import ast , os 
 from influxdb import InfluxDBClient
 import sys
+import base64
 
 
 def _init_influxdb_database():
