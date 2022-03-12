@@ -7,7 +7,7 @@ import ast , os
 from influxdb import InfluxDBClient
 import sys
 import base64
-
+from PIL import Image
 
 def _init_influxdb_database():
     databases = influx_client.get_list_database()
@@ -30,7 +30,9 @@ influx_client = InfluxDBClient(os.getenv('INFLUXDB_IP'), os.getenv('INFLUXDB_POR
 _init_influxdb_database()
 
 def on_RDD(data,recieved_time):
-
+    image = base64.b64decode(data['value'])
+    image = image.tobitmap()
+    print(image)
     jsondata_body = [{
         "measurement": "t_spark_test1",
         "tags": {
