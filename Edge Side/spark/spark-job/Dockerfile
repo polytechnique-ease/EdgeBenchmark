@@ -31,7 +31,7 @@ COPY edge-variables.env /edge-variables.env
 COPY script.py /script.py
 
 
-ENTRYPOINT /bin/sh
+ENTRYPOINT ["tail", "-f", "/dev/null"]
 # ENTRYPOINT spark-submit \ 
 #     --packages org.apache.bahir:spark-streaming-mqtt_2.11:2.4.0  \
 #     --deploy-mode cluster \
