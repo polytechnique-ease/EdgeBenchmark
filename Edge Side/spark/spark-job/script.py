@@ -1,6 +1,6 @@
 import json
 import time
-from pyspark import SparkContext
+from pyspark import SparkContext , SparkConf
 from pyspark.streaming import StreamingContext
 from mqtt import MQTTUtils
 import ast , os 
@@ -50,6 +50,8 @@ def on_RDD(data,recieved_time):
     save_influx(jsondata_body, str(data))
 
 
+conf = SparkConf().setAppName("My PySpark App") \
+                  .setMaster("spark://132.207.170.59:7077")
 
 sc = SparkContext(appName="sensors")
 sc.setLogLevel("ERROR")
