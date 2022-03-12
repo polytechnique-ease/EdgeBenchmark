@@ -30,8 +30,10 @@ ENV PATH $PATH:/opt/spark/bin:/opt/spark/sbin
 COPY edge-variables.env /edge-variables.env
 COPY script.py /script.py
 
-ENTRYPOINT spark-submit \ 
-    --packages org.apache.bahir:spark-streaming-mqtt_2.11:2.4.0  \
-    --deploy-mode cluster \
-     --master spark://132.207.170.59:7077 \
-     script.py
+
+ENTRYPOINT /bin/sh
+# ENTRYPOINT spark-submit \ 
+#     --packages org.apache.bahir:spark-streaming-mqtt_2.11:2.4.0  \
+#     --deploy-mode cluster \
+#      --master spark://132.207.170.59:7077 \
+#      script.py
