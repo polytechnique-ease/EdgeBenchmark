@@ -53,8 +53,9 @@ def on_RDD(data,recieved_time):
 conf = SparkConf().setAppName("My PySpark App") \
                   .setMaster("spark://132.207.170.59:7077")
 
-sc = SparkContext(appName="sensors")
-sc.setLogLevel("ERROR")
+sc = SparkContext(conf)
+sc = sc.addJar("org.apache.bahir:spark-streaming-mqtt_2.11:2.4.0")
+sc = sc.setLogLevel("ERROR")
 ssc = StreamingContext(sc, 1)
 ssc.checkpoint("checkpoint")
 
@@ -63,25 +64,25 @@ brokerUrl = os.getenv('MQTT_SERVER_IP')+":"+os.getenv('MQTT_SERVER_PORT') # "tcp
 # topic or topic pattern where temperature data is being sent
 topic = "topic"
 
-mqttStream = MQTTUtils.createStream(ssc, brokerUrl, topic, username=None, password=None)
-mqttStream = mqttStream.map(lambda js: json.loads(js))
+# mqttStream = MQTTUtils.createStream(ssc, brokerUrl, topic, username=None, password=None)
+# mqttStream = mqttStream.map(lambda js: json.loads(js))
 
-mqttStream = mqttStream \
-   .filter(lambda message: ((message['size'] < 148000) and (message['size'] > 141000)))
+# mqttStream = mqttStream \
+#    .filter(lambda message: ((message['size'] < 148000) and (message['size'] > 141000)))
 
       
-def printSomething(beforesparktime, rdd):
-    c = rdd.collect()
-    print("-------------------------------------------")
-    print("Time: %s" % beforesparktime)
-    print("-------------------------------------------")
+# def printSomething(beforesparktime, rdd):
+#     c = rdd.collect()
+#     print("-------------------------------------------")
+#     print("Time: %s" % beforesparktime)
+#     print("-------------------------------------------")
     
-    for record in c:
-        # "draw" our lil' ASCII-based histogram
-        on_RDD(record,str(beforesparktime.timestamp()))
-    print("")
+#     for record in c:
+#         # "draw" our lil' ASCII-based histogram
+#         on_RDD(record,str(beforesparktime.timestamp()))
+#     print("")
     
-mqttStream.foreachRDD(printSomething)
+# mqttStream.foreachRDD(printSomething)
 
 
 ssc.start()
