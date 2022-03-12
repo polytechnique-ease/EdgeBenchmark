@@ -6,8 +6,9 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN apt-get update && apt-get install -y default-jdk scala git wget software-properties-common 
 RUN add-apt-repository -y ppa:deadsnakes/ppa
+
 RUN apt-get update && apt-get install -y python3.8 python3-pip libjpeg-dev zlib1g-dev
-RUN pip3 install  influxdb  python-dotenv Pillow pyspark paho-mqtt
+RUN pip3 install  influxdb  python-dotenv Pillow
 
 
 
@@ -29,4 +30,8 @@ ENV PATH $PATH:/opt/spark/bin:/opt/spark/sbin
 COPY edge-variables.env /edge-variables.env
 COPY script.py /script.py
 
-ENTRYPOINT python3 script.py
+ENTRYPOINT spark-submit \ 
+    --packages org.apache.bahir:spark-streaming-mqtt_2.11:2.4.0  \
+    --deploy-mode cluster \
+     --master spark://132.207.170.59:7077 \
+     script.py

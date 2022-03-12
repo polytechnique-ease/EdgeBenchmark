@@ -1,13 +1,12 @@
 import json
 import time
-from pyspark import SparkContext , SparkConf
+from pyspark import SparkContext
 from pyspark.streaming import StreamingContext
-#from mqtt import MQTTUtils
+from mqtt import MQTTUtils
 import ast , os 
 from influxdb import InfluxDBClient
 import sys
-import base64
-from PIL import Image
+
 
 def _init_influxdb_database():
     databases = influx_client.get_list_database()
@@ -30,9 +29,7 @@ influx_client = InfluxDBClient(os.getenv('INFLUXDB_IP'), os.getenv('INFLUXDB_POR
 _init_influxdb_database()
 
 def on_RDD(data,recieved_time):
-    image = base64.b64decode(data['value'])
-    image = image.tobitmap()
-    print(image)
+
     jsondata_body = [{
         "measurement": "t_spark_test1",
         "tags": {
@@ -50,12 +47,9 @@ def on_RDD(data,recieved_time):
     save_influx(jsondata_body, str(data))
 
 
-conf = SparkConf().setAppName("My PySpark App") \
-                  .setMaster("spark://132.207.170.59:7077")
 
-sc = SparkContext(conf)
-sc = sc.addJar("org.apache.bahir:spark-streaming-mqtt_2.11:2.4.0")
-sc = sc.setLogLevel("ERROR")
+sc = SparkContext(appName="sensors")
+sc.setLogLevel("ERROR")
 ssc = StreamingContext(sc, 1)
 ssc.checkpoint("checkpoint")
 
@@ -64,25 +58,25 @@ brokerUrl = os.getenv('MQTT_SERVER_IP')+":"+os.getenv('MQTT_SERVER_PORT') # "tcp
 # topic or topic pattern where temperature data is being sent
 topic = "topic"
 
-# mqttStream = MQTTUtils.createStream(ssc, brokerUrl, topic, username=None, password=None)
-# mqttStream = mqttStream.map(lambda js: json.loads(js))
+mqttStream = MQTTUtils.createStream(ssc, brokerUrl, topic, username=None, password=None)
+mqttStream = mqttStream.map(lambda js: json.loads(js))
 
-# mqttStream = mqttStream \
-#    .filter(lambda message: ((message['size'] < 148000) and (message['size'] > 141000)))
+mqttStream = mqttStream \
+   .filter(lambda message: ((message['size'] < 148000) and (message['size'] > 141000)))
 
       
-# def printSomething(beforesparktime, rdd):
-#     c = rdd.collect()
-#     print("-------------------------------------------")
-#     print("Time: %s" % beforesparktime)
-#     print("-------------------------------------------")
+def printSomething(beforesparktime, rdd):
+    c = rdd.collect()
+    print("-------------------------------------------")
+    print("Time: %s" % beforesparktime)
+    print("-------------------------------------------")
     
-#     for record in c:
-#         # "draw" our lil' ASCII-based histogram
-#         on_RDD(record,str(beforesparktime.timestamp()))
-#     print("")
+    for record in c:
+        # "draw" our lil' ASCII-based histogram
+        on_RDD(record,str(beforesparktime.timestamp()))
+    print("")
     
-# mqttStream.foreachRDD(printSomething)
+mqttStream.foreachRDD(printSomething)
 
 
 ssc.start()
