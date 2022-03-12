@@ -29,6 +29,4 @@ ENV PATH $PATH:/opt/spark/bin:/opt/spark/sbin
 COPY edge-variables.env /edge-variables.env
 COPY script.py /script.py
 
-ENTRYPOINT pyspark \ 
-    --packages org.apache.bahir:spark-streaming-mqtt_2.11:2.4.0  \
-     script.py
+ENTRYPOINT python3 script.py
