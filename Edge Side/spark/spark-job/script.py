@@ -2,7 +2,7 @@ import json
 import time
 from pyspark import SparkContext , SparkConf
 from pyspark.streaming import StreamingContext
-from mqtt import MQTTUtils
+#from mqtt import MQTTUtils
 import ast , os 
 from influxdb import InfluxDBClient
 import sys
