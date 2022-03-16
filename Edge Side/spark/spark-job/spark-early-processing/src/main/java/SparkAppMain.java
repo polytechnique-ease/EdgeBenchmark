@@ -8,11 +8,14 @@ import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.mqtt.MQTTUtils;
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class SparkAppMain {
     InfluxDB influxDB = InfluxDBFactory.connect("132.207.170.25:8086");
-    public static void on_RDD(String data , String recieved_time){
+    public static void on_RDD(JSONObject data , String recieved_time){
         System.out.println(data);
     }
 
@@ -24,20 +27,25 @@ public class SparkAppMain {
 
         String topic = "topic";
         JavaReceiverInputDStream<String> mqttStream = MQTTUtils.createStream(jssc, brokerUrl, topic);
-        JavaDStream<String> sensorDetailsStream = mqttStream.map(x -> {
-            return x;
+        JavaDStream<JSONObject> sensorDetailsStream = mqttStream.map(x -> {
+            try {
+                return new JSONObject(x);
+            }catch (JSONException err){
+                System.out.println(err);
+            }
+            return null;
         });
         sensorDetailsStream.foreachRDD(
-                (VoidFunction<JavaRDD<String>>) ( rdd) -> {
+                (VoidFunction<JavaRDD<JSONObject>>) ( rdd) -> {
                     String beforesparktime = "0" ;
-                    rdd.foreach(new VoidFunction<String>() {
+                    rdd.foreach(new VoidFunction<JSONObject>() {
 
-                        public void on_RDD(String data , String recieved_time){
+                        public void on_RDD(JSONObject data , String recieved_time){
                             System.out.println(data);
                         }
 
                         @Override
-                        public void call(String s) throws Exception {
+                        public void call(JSONObject s) throws Exception {
                             System.out.println("-------------------------------------------");
                             System.out.println("Time " + beforesparktime +":");
                             System.out.println("-------------------------------------------");
