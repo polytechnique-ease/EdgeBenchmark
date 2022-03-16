@@ -46,7 +46,12 @@ public class SparkAppMain {
                     });
                 }
         );
-
+        try {
+            jssc.start();
+            jssc.awaitTermination();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 }
