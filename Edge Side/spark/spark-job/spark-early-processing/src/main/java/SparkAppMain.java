@@ -16,7 +16,7 @@ import org.json.JSONObject;
 public class SparkAppMain {
     InfluxDB influxDB = InfluxDBFactory.connect("132.207.170.25:8086");
     public static void on_RDD(JSONObject data , String recieved_time){
-        System.out.println(data);
+        System.out.println(data.getString("camera_id"));
     }
 
     public static void main(String[] args)  {
