@@ -17,7 +17,7 @@ public class SparkAppMain {
     }
 
     public static void main(String[] args)  {
-        SparkConf conf = new SparkConf().setMaster("local[*]").setAppName("sensors");
+        SparkConf conf = new SparkConf().setAppName("sensors");
         JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(1));
         jssc.sparkContext().setLogLevel("ERROR");
         String brokerUrl = "tcp://132.207.170.59:1883";
