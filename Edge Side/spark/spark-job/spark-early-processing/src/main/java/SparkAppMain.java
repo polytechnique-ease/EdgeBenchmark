@@ -11,7 +11,7 @@ import com.influxdb.client.InfluxDBClient;
 
 
 public class SparkAppMain {
-    InfluxDBClient influxDBClient = InfluxDBClientFactory.createV1("http://localhost:8086","",[],"sensors");
+    //InfluxDBClient influxDBClient = InfluxDBClientFactory.createV1("http://localhost:8086","",[],"sensors");
 
 
     public static void on_RDD(String data , String recieved_time){
@@ -52,3 +52,6 @@ public class SparkAppMain {
     }
 
 }
+//spark-submit \
+//  --class SparkAppMain \
+//  target/spark-early-processing-1.0-SNAPSHOT.jar
