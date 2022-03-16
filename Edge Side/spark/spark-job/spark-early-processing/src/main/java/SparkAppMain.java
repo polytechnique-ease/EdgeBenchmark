@@ -11,9 +11,7 @@ import org.influxdb.InfluxDBFactory;
 
 
 public class SparkAppMain {
-    //InfluxDB influxDB = InfluxDBFactory.connect("132.207.170.25:8086");
-   // influxDB.
-
+    InfluxDB influxDB = InfluxDBFactory.connect("132.207.170.25:8086");
     public static void on_RDD(String data , String recieved_time){
         System.out.println(data);
     }
