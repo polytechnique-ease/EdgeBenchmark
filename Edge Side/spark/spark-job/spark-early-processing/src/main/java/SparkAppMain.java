@@ -1,4 +1,3 @@
-import com.influxdb.client.InfluxDBClientFactory;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.VoidFunction;
@@ -7,12 +6,13 @@ import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaReceiverInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.mqtt.MQTTUtils;
-import com.influxdb.client.InfluxDBClient;
+import org.influxdb.InfluxDB;
+import org.influxdb.InfluxDBFactory;
 
 
 public class SparkAppMain {
-    //InfluxDBClient influxDBClient = InfluxDBClientFactory.createV1("http://localhost:8086","",[],"sensors");
-
+    //InfluxDB influxDB = InfluxDBFactory.connect("132.207.170.25:8086");
+   // influxDB.
 
     public static void on_RDD(String data , String recieved_time){
         System.out.println(data);
