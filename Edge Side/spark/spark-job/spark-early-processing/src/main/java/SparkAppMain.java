@@ -52,6 +52,4 @@ public class SparkAppMain {
     }
 
 }
-//spark-submit \
-//  --class SparkAppMain \
-//  target/spark-early-processing-1.0-SNAPSHOT.jar
+//spark-submit --class SparkAppMain target/spark-early-processing-1.0-SNAPSHOT.jar
