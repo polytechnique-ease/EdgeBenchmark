@@ -9,9 +9,9 @@ import java.io.IOException;
 import org.apache.spark.streaming.mqtt.MQTTUtils;
 //import org.influxdb.InfluxDB;
 //import org.influxdb.InfluxDBFactory;
-/*import org.json.JSONArray;
+import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;*/
+import org.json.JSONObject;
 
 public class SparkMain {
 
@@ -21,12 +21,44 @@ public class SparkMain {
 	        SparkConf conf = new SparkConf().setMaster("local[*]").setAppName("sensors");
 	        JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(1));
 	        jssc.sparkContext().setLogLevel("ERROR");
-	        jssc.sparkContext().addJar("https://repo1.maven.org/maven2/org/apache/bahir/spark-streaming-mqtt_2.12/2.4.0/spark-streaming-mqtt_2.12-2.4.0.jar");
 	        String brokerUrl = "tcp://132.207.170.59:1883";
 
 	        String topic = "topic";
 	        JavaReceiverInputDStream<String> mqttStream = MQTTUtils.createStream(jssc, brokerUrl, topic);
+	        
+	        JavaDStream<JSONObject> sensorDetailsStream = mqttStream.map(x -> {
+	            try {
+	                return new JSONObject(x);
+	            }catch (JSONException err){
+	                System.out.println(err);
+	            }
+	            return null;
+	        });
+	        sensorDetailsStream.foreachRDD(
+	                (VoidFunction<JavaRDD<JSONObject>>) ( rdd) -> {
+	                    String beforesparktime = "0" ;
+	                    rdd.foreach(new VoidFunction<JSONObject>() {
 
+	                        public void on_RDD(JSONObject data , String recieved_time){
+	                            System.out.println(data);
+	                        }
+
+	                        @Override
+	                        public void call(JSONObject s) throws Exception {
+	                            System.out.println("-------------------------------------------");
+	                            System.out.println("Time " + beforesparktime +":");
+	                            System.out.println("-------------------------------------------");
+	                            //SparkAppMain.on_RDD(influxDB,s,beforesparktime); ;
+	                        }
+	                    });
+	                }
+	        );
+	        try {
+	            jssc.start();
+	            jssc.awaitTermination();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 	}
 
 }
