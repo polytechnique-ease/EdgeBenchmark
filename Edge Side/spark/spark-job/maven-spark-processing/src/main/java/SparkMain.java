@@ -21,10 +21,11 @@ public class SparkMain {
 	        SparkConf conf = new SparkConf().setMaster("local[*]").setAppName("sensors");
 	        JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(1));
 	        jssc.sparkContext().setLogLevel("ERROR");
+	        jssc.sparkContext().addJar("https://repo1.maven.org/maven2/org/apache/bahir/spark-streaming-mqtt_2.12/2.4.0/spark-streaming-mqtt_2.12-2.4.0.jar");
 	        String brokerUrl = "tcp://132.207.170.59:1883";
 
 	        String topic = "topic";
-	       // JavaReceiverInputDStream<String> mqttStream = MQTTUtils.createStream(jssc, brokerUrl, topic);
+	        JavaReceiverInputDStream<String> mqttStream = MQTTUtils.createStream(jssc, brokerUrl, topic);
 
 	}
 
