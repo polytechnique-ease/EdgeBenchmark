@@ -7,22 +7,29 @@ import org.apache.spark.streaming.api.java.JavaReceiverInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import java.io.IOException; 
 import org.apache.spark.streaming.mqtt.MQTTUtils;
-import org.influxdb.InfluxDB;
-import org.influxdb.InfluxDBFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import java.time.Instant;
+import java.util.List;
 
+import com.influxdb.annotations.Column;
+import com.influxdb.annotations.Measurement;
+import com.influxdb.client.InfluxDBClient;
+import com.influxdb.client.InfluxDBClientFactory;
+import com.influxdb.client.QueryApi;
+import com.influxdb.client.WriteApiBlocking;
+import com.influxdb.client.domain.WritePrecision;
+import com.influxdb.client.write.Point;
+import com.influxdb.query.FluxRecord;
+import com.influxdb.query.FluxTable;
 public class SparkMain {
-
+	  private static char[] token = "kbgEJQEHfZwpgCZaaX21aPbLdSB86U0Y9-XUH7r_1aIsgr7QSdjU9O5PASrp62bYmNhIB01zrC7w_Ep3pIHaUQ==\n".toCharArray();
+	  private static String org = "polymtl";
+	  private static String bucket = "sensors";
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-	   InfluxDB influxDB = InfluxDBFactory.connect("132.207.170.25:8086");
-	   if (!influxDB.databaseExists("sensors")){
-        influxDB.createDatabase("sensors");
-	   }
-       influxDB.setDatabase("sensors");
-	     	
+			InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://132.207.170.25:8088", token, org, bucket);
 	        SparkConf conf = new SparkConf().setMaster("local[*]").setAppName("sensors");
 	        JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(1));
 	        jssc.sparkContext().setLogLevel("ERROR");
