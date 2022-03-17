@@ -24,7 +24,7 @@ import com.influxdb.client.write.Point;
 import com.influxdb.query.FluxRecord;
 import com.influxdb.query.FluxTable;
 public class SparkMain {
-	  private static char[] token = "kbgEJQEHfZwpgCZaaX21aPbLdSB86U0Y9-XUH7r_1aIsgr7QSdjU9O5PASrp62bYmNhIB01zrC7w_Ep3pIHaUQ==\n".toCharArray();
+	  private static char[] token = "kbgEJQEHfZwpgCZaaX21aPbLdSB86U0Y9-XUH7r_1aIsgr7QSdjU9O5PASrp62bYmNhIB01zrC7w_Ep3pIHaUQ==".toCharArray();
 	  private static String org = "polymtl";
 	  private static String bucket = "sensors";
 	public static void main(String[] args) {
