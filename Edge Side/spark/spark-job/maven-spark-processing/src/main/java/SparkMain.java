@@ -30,7 +30,18 @@ public class SparkMain {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 			InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://132.207.170.25:8088", token, org, bucket);
-	        SparkConf conf = new SparkConf().setMaster("local[*]").setAppName("sensors");
+			WriteApiBlocking writeApi = influxDBClient.getWriteApiBlocking();
+			Point point = Point.measurement("sensor").addTag("sensor_id", "TLM0100").addField("location", "Main Lobby")
+
+					.addField("model_number", "TLM89092A")
+
+					.time(Instant.now(), WritePrecision.MS);
+
+					  
+
+					writeApi.writePoint(point);
+			
+			SparkConf conf = new SparkConf().setMaster("local[*]").setAppName("sensors");
 	        JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(1));
 	        jssc.sparkContext().setLogLevel("ERROR");
 	        String brokerUrl = "tcp://132.207.170.59:1883";
