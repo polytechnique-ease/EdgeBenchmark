@@ -6,8 +6,8 @@ import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaReceiverInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.mqtt.MQTTUtils;
-import org.influxdb.InfluxDB;
-import org.influxdb.InfluxDBFactory;
+//import org.influxdb.InfluxDB;
+//import org.influxdb.InfluxDBFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,18 +15,18 @@ import org.json.JSONObject;
 
 public class SparkAppMain {
 
-    public static void on_RDD(InfluxDB influxDB , JSONObject data , String recieved_time){
+    public static void on_RDD(String influxDB , JSONObject data , String recieved_time){
         System.out.println(data.getString("camera_id"));
-        influxDB.write(data.toString());
+        //influxDB.write(data.toString());
     }
 
     public static void main(String[] args)  {
-        InfluxDB influxDB = InfluxDBFactory.connect("132.207.170.25:8086");
-        if (!influxDB.databaseExists("sensors")){
-            influxDB.createDatabase("sensors");
-        }
-        influxDB.setDatabase("sensors");
-
+      //  InfluxDB influxDB = InfluxDBFactory.connect("132.207.170.25:8086");
+//       if (!influxDB.databaseExists("sensors")){
+    //        influxDB.createDatabase("sensors");
+       // }
+    //    influxDB.setDatabase("sensors");
+        String influxDB = "ss";
         SparkConf conf = new SparkConf().setAppName("sensors");
         JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(1));
         jssc.sparkContext().setLogLevel("ERROR");
@@ -70,4 +70,4 @@ public class SparkAppMain {
     }
 
 }
-//spark-submit --class SparkAppMain target/spark-early-processing-1.0-SNAPSHOT.jar
+//spark-submit --class SparkAppMain target/spark-processing-1.0-SNAPSHOT.jar
