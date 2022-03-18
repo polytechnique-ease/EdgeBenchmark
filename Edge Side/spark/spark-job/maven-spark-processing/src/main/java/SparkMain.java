@@ -36,7 +36,7 @@ public class SparkMain {
 		InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://132.207.170.25:8088", token, org, bucket);
 		WriteApiBlocking writeApi = influxDBClient.getWriteApiBlocking();
 
-		Point point = Point.measurement("t_spark_test1").addTag("camera_id", data.getString("camera_id") ).addField("location", "Main Lobby")
+		Point point = Point.measurement(data.getString("measurement_name")).addTag("camera_id", data.getString("camera_id") ).addField("location", "Main Lobby")
 
 				.addField("beforeInfluxDB", String.valueOf(Timestamp.from(Instant.now())))
 				.addField("beforeSpark_time", beforesparktime)
