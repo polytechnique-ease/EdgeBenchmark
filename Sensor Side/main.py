@@ -126,7 +126,7 @@ class Camera():
                 jsondata['JPGQuality'] =  JPGQuality
                 jsondata['count'] =  count
                 jsondata['frame_id'] = str(frame_id)
-                jsondata['sent_time'] = timestamp
+                jsondata['FromSensor_time'] = timestamp
                 jsondata['value'] = str(image_base64)
                 client.publish(topic="topic", payload=json.dumps(jsondata), qos=1, retain=False)
 
