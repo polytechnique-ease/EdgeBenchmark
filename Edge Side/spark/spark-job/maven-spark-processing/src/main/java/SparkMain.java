@@ -10,6 +10,8 @@ import org.apache.spark.streaming.mqtt.MQTTUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
 
@@ -30,8 +32,10 @@ public class SparkMain {
 	public static void on_RDD(JSONObject data , String beforesparktime ){
 		InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://132.207.170.25:8088", token, org, bucket);
 		WriteApiBlocking writeApi = influxDBClient.getWriteApiBlocking();
+
 		Point point = Point.measurement("t_spark_test1").addTag("camera_id", data.getString("camera_id") ).addField("location", "Main Lobby")
 
+				.addField("beforeInfluxDB", String.valueOf(Timestamp.from(Instant.now())))
 				.addField("beforeSpark_time", beforesparktime)
 				.addField("frame_id", data.getString("frame_id"))
 				.addField("FromSensor_time", data.getString("FromSensor_time"))
