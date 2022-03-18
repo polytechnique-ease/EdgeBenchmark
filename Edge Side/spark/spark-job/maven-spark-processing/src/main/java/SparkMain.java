@@ -1,7 +1,10 @@
 import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.VoidFunction;
+import org.apache.spark.api.java.function.VoidFunction2;
 import org.apache.spark.streaming.Durations;
+import org.apache.spark.streaming.Time;
 import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaReceiverInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
@@ -67,20 +70,20 @@ public class SparkMain {
 	            return null;
 	        });
 	        sensorDetailsStream.foreachRDD(
-	                (VoidFunction<JavaRDD<JSONObject>>) ( rdd) -> {
-	                    String beforesparktime = "0" ;
-	                    rdd.foreach(new VoidFunction<JSONObject>() {
+					(VoidFunction2<JavaRDD<JSONObject>, Time>) (rdd, time) -> {
+						String beforesparktime = time.toString() ;
+						rdd.foreach(new VoidFunction<JSONObject>() {
 
-	                        @Override
-	                        public void call(JSONObject s) throws Exception {
-	                            System.out.println("-------------------------------------------");
-	                            System.out.println("Time " + beforesparktime +":");
-	                            System.out.println("-------------------------------------------");
-	                            SparkMain.on_RDD(s,beforesparktime); ;
-	                        }
-	                    });
-	                }
-	        );
+							@Override
+							public void call(JSONObject s) throws Exception {
+								System.out.println("-------------------------------------------");
+								System.out.println("Time " + beforesparktime +":");
+								System.out.println("-------------------------------------------");
+								SparkMain.on_RDD(s,beforesparktime); ;
+							}
+						});
+					}
+			);
 	        try {
 	            jssc.start();
 	            jssc.awaitTermination();
