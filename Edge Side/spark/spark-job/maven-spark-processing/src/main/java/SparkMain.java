@@ -46,7 +46,7 @@ public class SparkMain {
 				.addField("transmitdelay", data.getString("transmitdelay"))
 				.addField("JPGQuality", data.getString("JPGQuality")) ;
 
-
+		System.out.println(" Saving data of frame id :" + data.getString("frame_id") );
 		writeApi.writePoint(point);
 	}
 	public static void main(String[] args) {
