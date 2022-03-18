@@ -52,7 +52,7 @@ public class SparkMain {
 		// TODO Auto-generated method stub
 
 			
-			SparkConf conf = new SparkConf().setMaster("local[*]").setAppName("sensors");
+			SparkConf conf = new SparkConf().setMaster("spark://132.207.170.59:7077").setAppName("sensors");
 	        JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(1));
 	        jssc.sparkContext().setLogLevel("ERROR");
 	        String brokerUrl = "tcp://132.207.170.59:1883";
