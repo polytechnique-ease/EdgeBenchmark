@@ -46,7 +46,6 @@ public class SparkMain {
 				.addField("transmitdelay", data.getString("transmitdelay"))
 				.addField("JPGQuality", data.getString("JPGQuality")) ;
 
-		System.out.println(" Saving data of frame id :" + data.getString("frame_id") );
 		writeApi.writePoint(point);
 	}
 	public static void main(String[] args) {
@@ -75,11 +74,14 @@ public class SparkMain {
 						rdd.foreach(new VoidFunction<JSONObject>() {
 
 							@Override
-							public void call(JSONObject s) throws Exception {
+							public void call(JSONObject data) throws Exception {
 								System.out.println("-------------------------------------------");
 								System.out.println("Time " + beforesparktime +":");
 								System.out.println("-------------------------------------------");
-								SparkMain.on_RDD(s,beforesparktime); ;
+								System.out.println(" Saving data of frame id :" + data.getString("frame_id") );
+
+								SparkMain.on_RDD(data,beforesparktime); ;
+
 							}
 						});
 					}
