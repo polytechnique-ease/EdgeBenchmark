@@ -128,7 +128,7 @@ class Camera():
                 jsondata['frame_id'] = str(frame_id)
                 jsondata['FromSensor_time'] = timestamp
                 jsondata['value'] = str(image_base64)
-                jsondata['measurement'] = measurement_name
+                jsondata['measurement_name'] = measurement_name
                 client.publish(topic="topic", payload=json.dumps(jsondata), qos=1, retain=False)
 
                 time.sleep(1)
