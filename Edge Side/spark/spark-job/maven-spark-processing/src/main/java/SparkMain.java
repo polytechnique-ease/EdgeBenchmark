@@ -53,7 +53,7 @@ public class SparkMain {
 
 			
 			SparkConf conf = new SparkConf().setMaster("spark://132.207.170.59:7077").setAppName("sensors");
-			conf.set("spark.driver.memory", "4g");
+			//conf.set("spark.driver.memory", "4g");
 			JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(1));
 			//jssc.sparkContext().setLogLevel("ERROR");
 	        String brokerUrl = "tcp://132.207.170.59:1883";
