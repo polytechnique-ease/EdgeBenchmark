@@ -118,7 +118,7 @@ class Camera():
                 #list_image_base64.append(str(image_base64))
                 list_image_base64_str += str(image_base64)+'XXX'
                 image_base64_last = str(image_base64)
-                measurement_name = "t_spark_test1"
+                measurement_name = "test1"
                 jsondata = {}
                 jsondata['size'] =  os.stat(imageFileNameandPath).st_size
                 jsondata['camera_id'] =  camera_id
