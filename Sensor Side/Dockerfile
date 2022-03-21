@@ -16,5 +16,4 @@ RUN apt-get update && apt-get install -y build-essential \
 
 
 RUN pip install -r requirements.txt
-
 ENTRYPOINT ["python3", "/camera/main.py"]

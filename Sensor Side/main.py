@@ -41,7 +41,57 @@ print('Hello 1')
 def on_connect(client, userdata, flags, rc):
     """ The callback for when the client receives a CONNACK response from the server."""
     print('Connected with result code ' + str(rc))
+  #  client.subscribe('topic')
 # The callback for when a PUBLISH message is received from the server.
+def on_message(client, userdata, msg):
+    #current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    timestamp = str(time.time())
+    #print(msg.topic + ' ' + str(msg.payload))
+
+    #sensor_data = _parse_mqtt_message(msg.topic, msg.payload.decode('utf-8'))
+    #if sensor_data is not None:
+    #    _send_sensor_data_to_influxdb(sensor_data)
+    print("a")
+    #splits_ = str(msg.payload).split('XXX')
+    #splits_ = str(msg.payload).split('XXX')
+    #for i in range(len(splits_)):
+    data = ast.literal_eval(str(msg.payload))
+    data = ast.literal_eval(msg.payload.decode('utf-8'))
+    jsondata_body = [
+        {
+        "measurement": "t_spark_test1",
+        "tags": {
+            "camera_id": camera_id,
+        },
+        "transmitdelay":transmitdelay,
+        "JPGQuality":JPGQuality,
+        "fields": {
+            "recieved_time": timestamp,
+            "frame_id": data['frame_id'],
+            "sent_time": data['sent_time'],
+            "value": data['value']
+        }
+    }
+    ]
+    #save_influx(jsondata_body, str(msg.payload))
+    #print(msg.topic, str(msg.payload))
+    #thinktime or sleep aftersending
+
+    client.loop_stop()  # Stop loop
+    client.disconnect()  # disconnect
+
+    #if splits_[i] == 'refresh':
+    #client.reinitialise()
+    #camera = Camera(camera_id, destination_cluster_ip, JPGQuality, transmitdelay, './imagesout')
+    #camera.processVideoStream()
+    #time.sleep(1)
+
+    #val = splits_[1].replace('"', '')
+    #print('recieved id: ', val)
+    #if int(val) == 2222:
+    #    camera = Camera(camera_id, destination_cluster_ip, JPGQuality, transmitdelay, './imagesout')
+    #    camera.processVideoStream()
+
 
 def myconverter(o):
     if isinstance(o, datetime.datetime):
@@ -92,12 +142,6 @@ class Camera():
 
             list_image_base64_str = ''
             image_base64_last = ''
-            cname = "Client" + self.camera_id
-            client = mqtt.Client(cname)
-
-            client.on_connect = on_connect
-            client.connect(os.getenv('MQTT_SERVER_IP'), int(os.getenv('MQTT_SERVER_PORT')), 60)
-            client.loop_start()
             while success:
                 #for i in range(9):
                 #self.JPGQuality = i + 1
@@ -106,7 +150,7 @@ class Camera():
                 image_base64 = self.convertToBase64(imageFileNameandPath)
                 success, image = vidcap.read ()
                 print ('Read a new frame: ', success,  ' thread number:', thread)
-
+                
                 timestamp = str(time.time())
                 frame_id = timestamp+str(count)
                 end = time.time()
@@ -118,7 +162,7 @@ class Camera():
                 #list_image_base64.append(str(image_base64))
                 list_image_base64_str += str(image_base64)+'XXX'
                 image_base64_last = str(image_base64)
-                measurement_name = "test1"
+
                 jsondata = {}
                 jsondata['size'] =  os.stat(imageFileNameandPath).st_size
                 jsondata['camera_id'] =  camera_id
@@ -128,17 +172,34 @@ class Camera():
                 jsondata['frame_id'] = str(frame_id)
                 jsondata['FromSensor_time'] = timestamp
                 jsondata['value'] = str(image_base64)
-                jsondata['measurement_name'] = measurement_name
+                jsondata['measurement_name'] = "clustermode1sensors1"
+                cname = "Client" + str(count)
+                client = mqtt.Client(cname)
+
+                client.on_connect = on_connect
+                client.on_message = on_message
+                client.connect(os.getenv('MQTT_SERVER_IP'), int(os.getenv('MQTT_SERVER_PORT')), 60)
+                #client.subscribe("topic", qos=1)
+
+                #client.subscribe("topic", qos=1)
+                #test = {}
+                #test['count'] = str(count)
+                #client.publish(topic="topic", payload=str(count), qos=1, retain=False)
+                
+                #client.publish(topic="topic", payload=str(jsondata), qos=1, retain=False)
+
                 client.publish(topic="topic", payload=json.dumps(jsondata), qos=1, retain=False)
-
+                #client.loop_forever()
+                client.loop_start()
                 time.sleep(1)
-
+                #list_image_base64_str = ''
+                #print(count)
                 count += 1
 
                 print('Experiment Runtime (seconds): ' + str(int(runtime_seconds)))
                 print('Images written per (second): ' + str(count/runtime_seconds))
-            client.loop_stop()
-            client.disconnect()
+
+
             self.cleanup()
 
 
@@ -150,9 +211,11 @@ class Camera():
 
 
 
+check_looping = 0
 
 
 
 
+#while True:
 camera = Camera(camera_id, JPGQuality, transmitdelay, './imagesout')
 camera.processVideoStream()

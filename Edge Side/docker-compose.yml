@@ -27,6 +27,12 @@ services:
       - sparkmaster
     env_file:
       - edge-variables.env
+    deploy:
+      resources:
+        limits:
+          memory: 10G
+        reservations:
+          memory: 10G
   # sparkjob: 
   #   image: mahsahadian/spark-job
   #   container_name: sparkjob
