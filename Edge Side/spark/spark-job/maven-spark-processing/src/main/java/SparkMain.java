@@ -53,7 +53,7 @@ public class SparkMain {
 
 			
 			SparkConf conf = new SparkConf().setAppName("sensors");
-			conf.setMaster("spark://132.207.170.59:7077");
+			//conf.setMaster("spark://132.207.170.59:7077");
 			conf.set("spark.executor.memory", "2g");
 			JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(1));
 			jssc.sparkContext().setLogLevel("WARN");
