@@ -1,3 +1,4 @@
+import com.influxdb.client.*;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
@@ -20,10 +21,6 @@ import java.util.List;
 
 import com.influxdb.annotations.Column;
 import com.influxdb.annotations.Measurement;
-import com.influxdb.client.InfluxDBClient;
-import com.influxdb.client.InfluxDBClientFactory;
-import com.influxdb.client.QueryApi;
-import com.influxdb.client.WriteApiBlocking;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.Point;
 import com.influxdb.query.FluxRecord;
@@ -33,7 +30,13 @@ public class SparkMain {
 	  private static String org = "polymtl";
 	  private static String bucket = "sensors";
 	public static void on_RDD(JSONObject data , String beforesparktime ){
-		InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://132.207.170.25:8088", token, org, bucket);
+		InfluxDBClientOptions options = InfluxDBClientOptions.builder()
+				.url("http://132.207.170.25:8088")
+				.authenticateToken(token)
+				.org(org)
+				.bucket(bucket)
+				.build();
+		InfluxDBClient influxDBClient = InfluxDBClientFactory.create(options);
 		WriteApiBlocking writeApi = influxDBClient.getWriteApiBlocking();
 
 		Point point = Point.measurement(data.getString("measurement_name")).addTag("camera_id", data.getString("camera_id") ).addField("location", "Main Lobby")
