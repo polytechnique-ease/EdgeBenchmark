@@ -1,4 +1,5 @@
 import com.influxdb.client.*;
+import okhttp3.OkHttpClient;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
@@ -18,6 +19,7 @@ import org.json.JSONObject;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import com.influxdb.annotations.Column;
 import com.influxdb.annotations.Measurement;
@@ -30,8 +32,15 @@ public class SparkMain {
 	  private static String org = "polymtl";
 	  private static String bucket = "sensors";
 	public static void on_RDD(JSONObject data , String beforesparktime ){
+
+		OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient().newBuilder()
+				.connectTimeout(40, TimeUnit.SECONDS)
+				.readTimeout(60, TimeUnit.SECONDS)
+				.writeTimeout(60, TimeUnit.SECONDS);
+
 		InfluxDBClientOptions options = InfluxDBClientOptions.builder()
 				.url("http://132.207.170.25:8088")
+				.okHttpClient(okHttpClientBuilder)
 				.authenticateToken(token)
 				.org(org)
 				.bucket(bucket)
@@ -50,7 +59,9 @@ public class SparkMain {
 				.addField("JPGQuality", data.getString("JPGQuality")) ;
 
 		writeApi.writePoint(point);
+
 	}
+
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
