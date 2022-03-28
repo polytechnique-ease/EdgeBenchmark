@@ -40,7 +40,7 @@ public class SparkMain {
 			;
 
 		InfluxDBClientOptions options = InfluxDBClientOptions.builder()
-				.url("http://132.207.170.25:8088")
+				.url("http://132.207.170.25:8086")
 				.okHttpClient(okHttpClientBuilder)
 				.authenticateToken(token)
 				.org(org)
