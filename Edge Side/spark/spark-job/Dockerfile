@@ -28,12 +28,6 @@ RUN . ~/.profile
 
 ENV PATH $PATH:/opt/spark/bin:/opt/spark/sbin
 COPY edge-variables.env /edge-variables.env
-COPY script.py /script.py
+COPY maven-spark-processing/target/maven-spark-processing-1.0-SNAPSHOT.jar /
 
-
-ENTRYPOINT ["tail", "-f", "/dev/null"]
-# ENTRYPOINT spark-submit \ 
-#     --packages org.apache.bahir:spark-streaming-mqtt_2.11:2.4.0  \
-#     --deploy-mode cluster \
-#      --master spark://132.207.170.59:7077 \
-#      script.py
+ENTRYPOINT spark-submit  --packages com.influxdb:influxdb-client-java:4.3.0,org.apache.bahir:spark-streaming-mqtt_2.11:2.4.0  --class SparkMain maven-spark-processing-1.0-SNAPSHOT.jar && tail -f /dev/null

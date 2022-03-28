@@ -23,26 +23,17 @@ services:
     image: mahsahadian/spark-worker
     container_name: sparkworker
     restart: always
+    ports:
+      - "8081:8081"    
     depends_on:
       - sparkmaster
     env_file:
       - edge-variables.env
-    deploy:
-      resources:
-        limits:
-          memory: 10G
-        reservations:
-          memory: 10G
-  # sparkjob: 
-  #   image: mahsahadian/spark-job
-  #   container_name: sparkjob
-  #   depends_on:
-  #     - sparkworker
-  #   env_file:
-  #     - edge-variables.env
-  #   deploy:
-  #     resources:
-  #       limits:
-  #         memory: 5G
-  #       reservations:
-  #         memory: 1G
+  sparkjob: 
+    image: mahsahadian/spark-job
+    container_name: sparkjob
+    depends_on:
+      - sparkworker
+    env_file:
+      - edge-variables.env
+
