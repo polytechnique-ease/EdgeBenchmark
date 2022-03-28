@@ -18,6 +18,10 @@ from typing import NamedTuple
 import json
 
 from dotenv import load_dotenv
+import socket 
+
+#socket.setdefaulttimeout(10000000000)
+
 
 load_dotenv("sensor-variables.env")
 
@@ -172,7 +176,7 @@ class Camera():
                 jsondata['frame_id'] = str(frame_id)
                 jsondata['FromSensor_time'] = timestamp
                 jsondata['value'] = str(image_base64)
-                jsondata['measurement_name'] = "clustermode1sensors1"
+                jsondata['measurement_name'] = "cmode100_53"
                 cname = "Client" + str(count)
                 client = mqtt.Client(cname)
 
