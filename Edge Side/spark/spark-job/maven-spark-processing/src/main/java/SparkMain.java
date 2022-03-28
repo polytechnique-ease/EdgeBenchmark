@@ -34,9 +34,10 @@ public class SparkMain {
 	public static void on_RDD(JSONObject data , String beforesparktime ){
 
 		OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient().newBuilder()
-				.connectTimeout(40, TimeUnit.SECONDS)
-				.readTimeout(60, TimeUnit.SECONDS)
-				.writeTimeout(60, TimeUnit.SECONDS);
+			//	.connectTimeout(40, TimeUnit.SECONDS)
+			//	.readTimeout(60, TimeUnit.SECONDS)
+			//	.writeTimeout(60, TimeUnit.SECONDS)
+			;
 
 		InfluxDBClientOptions options = InfluxDBClientOptions.builder()
 				.url("http://132.207.170.25:8088")
