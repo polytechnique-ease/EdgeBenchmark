@@ -5,6 +5,7 @@ import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.VoidFunction;
 import org.apache.spark.api.java.function.VoidFunction2;
+import org.apache.spark.storage.StorageLevel;
 import org.apache.spark.streaming.Durations;
 import org.apache.spark.streaming.Time;
 import org.apache.spark.streaming.api.java.JavaDStream;
@@ -108,7 +109,7 @@ public class SparkMain {
 								SparkMain.on_RDD(data,beforesparktime);
 							}
 						});
-						rdd.unpersist();
+						rdd.persist(StorageLevel.MEMORY_AND_DISK());
 					}
 			);
 	        try {
