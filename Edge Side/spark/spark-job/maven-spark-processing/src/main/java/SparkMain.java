@@ -31,22 +31,9 @@ public class SparkMain {
 	  private static char[] token = "H0mkVl01ROTMjNDn0JvbuBQWCfZT1ci5gKjJa-BwEdW0mRRc5VV8c8MdjFU63x8dvGwolNmuTEB0j6XVVA0Vaw==".toCharArray();
 	  private static String org = "polymtl";
 	  private static String bucket = "sensors";
+	  private static WriteApiBlocking writeApi ;
 	public static void on_RDD(JSONObject data , String beforesparktime ){
 
-		OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient().newBuilder()
-			//	.connectTimeout(40, TimeUnit.SECONDS)
-			//	.readTimeout(60, TimeUnit.SECONDS)
-			//	.writeTimeout(60, TimeUnit.SECONDS)
-			;
-		InfluxDBClientOptions options = InfluxDBClientOptions.builder()
-				.url("http://132.207.170.25:8086")
-				.okHttpClient(okHttpClientBuilder)
-				.authenticateToken(token)
-				.org(org)
-				.bucket(bucket)
-				.build();
-		InfluxDBClient influxDBClient = InfluxDBClientFactory.create(options);
-		WriteApiBlocking writeApi = influxDBClient.getWriteApiBlocking();
 
 		Point point = Point.measurement(data.getString("measurement_name")).addTag("camera_id", data.getString("camera_id") ).addField("location", "Main Lobby")
 
@@ -67,13 +54,32 @@ public class SparkMain {
 
 			
 			SparkConf conf = new SparkConf().setAppName("sensors");
-			conf.setMaster("spark://132.207.170.59:7077");
-			conf.set("spark.executor.memory", "2g");
+			// conf.setMaster("spark://132.207.170.59:7077");
+			// conf.set("spark.executor.memory", "2g");
 			JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(1));
 			jssc.sparkContext().setLogLevel("WARN");
 	        String brokerUrl = "tcp://132.207.170.59:1883";
 			//jssc.checkpoint("checkpoint");
 	        String topic = "topic";
+
+
+		OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient().newBuilder()
+				//	.connectTimeout(40, TimeUnit.SECONDS)
+				//	.readTimeout(60, TimeUnit.SECONDS)
+				//	.writeTimeout(60, TimeUnit.SECONDS)
+				;
+
+		InfluxDBClientOptions options = InfluxDBClientOptions.builder()
+				.url("http://132.207.170.25:8086")
+				.okHttpClient(okHttpClientBuilder)
+				.authenticateToken(token)
+				.org(org)
+				.bucket(bucket)
+				.build();
+		InfluxDBClient influxDBClient = InfluxDBClientFactory.create(options);
+		writeApi = influxDBClient.getWriteApiBlocking();
+
+
 	        JavaReceiverInputDStream<String> mqttStream = MQTTUtils.createStream(jssc, brokerUrl, topic);
 	        
 	        JavaDStream<JSONObject> sensorDetailsStream = mqttStream.map(x -> {
