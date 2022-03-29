@@ -105,11 +105,10 @@ public class SparkMain {
 								System.out.println("-------------------------------------------");
 								System.out.println(" Saving data of frame id :" + data.getString("frame_id") );
 
-								SparkMain.on_RDD(data,beforesparktime); ;
-
+								SparkMain.on_RDD(data,beforesparktime);
+								rdd.unpersist();
 							}
 						});
-						rdd.unpersist();
 					}
 			);
 	        try {
