@@ -110,7 +110,7 @@ public class SparkMain {
 								SparkMain.on_RDD(data,beforesparktime);
 							}
 						});
-						rdd.unpersist();
+						//rdd.unpersist();
 					}
 			);
 	        try {
