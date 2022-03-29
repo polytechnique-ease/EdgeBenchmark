@@ -56,6 +56,7 @@ public class SparkMain {
 			SparkConf conf = new SparkConf().setAppName("sensors");
 			//conf.setMaster("spark://132.207.170.59:7077");
 		    conf.set("spark.executor.memory", "2000m");
+		    conf.set("spark.driver.memory", "2000m");
 
 		JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(1));
 			jssc.sparkContext().setLogLevel("WARN");
@@ -108,6 +109,7 @@ public class SparkMain {
 
 							}
 						});
+						rdd.unpersist();
 					}
 			);
 	        try {
