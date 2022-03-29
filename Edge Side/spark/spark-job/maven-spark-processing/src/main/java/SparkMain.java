@@ -5,7 +5,6 @@ import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.VoidFunction;
 import org.apache.spark.api.java.function.VoidFunction2;
-import org.apache.spark.storage.StorageLevel;
 import org.apache.spark.streaming.Durations;
 import org.apache.spark.streaming.Time;
 import org.apache.spark.streaming.api.java.JavaDStream;
@@ -57,8 +56,6 @@ public class SparkMain {
 			SparkConf conf = new SparkConf().setAppName("sensors");
 			conf.setMaster("spark://132.207.170.59:7077");
 		    conf.set("spark.executor.memory", "2000m");
-		 //   conf.set("spark.driver.memory", "2000m");
-		   // conf.set("spark.cleaner.periodicGC.interval", "1min");
 
 		JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(1));
 			jssc.sparkContext().setLogLevel("WARN");
@@ -107,7 +104,8 @@ public class SparkMain {
 								System.out.println("-------------------------------------------");
 								System.out.println(" Saving data of frame id :" + data.getString("frame_id") );
 
-								SparkMain.on_RDD(data,beforesparktime);
+								SparkMain.on_RDD(data,beforesparktime); ;
+
 							}
 						});
 					}
