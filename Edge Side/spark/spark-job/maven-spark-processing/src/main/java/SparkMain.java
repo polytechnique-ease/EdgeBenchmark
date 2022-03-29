@@ -109,7 +109,7 @@ public class SparkMain {
 								SparkMain.on_RDD(data,beforesparktime);
 							}
 						});
-						rdd.persist(StorageLevel.MEMORY_AND_DISK());
+						rdd.unpersist();
 					}
 			);
 	        try {
