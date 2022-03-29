@@ -61,7 +61,7 @@ public class SparkMain {
 			jssc.sparkContext().setLogLevel("WARN");
 
 	        String brokerUrl = "tcp://132.207.170.59:1883";
-			//jssc.checkpoint("checkpoint");
+			jssc.checkpoint("checkpoint");
 	        String topic = "topic";
 
 
