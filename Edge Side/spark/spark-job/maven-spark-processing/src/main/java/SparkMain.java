@@ -57,7 +57,7 @@ public class SparkMain {
 			SparkConf conf = new SparkConf().setAppName("sensors");
 			conf.setMaster("spark://132.207.170.59:7077");
 		    conf.set("spark.executor.memory", "2000m");
-		    conf.set("spark.driver.memory", "2000m");
+		 //   conf.set("spark.driver.memory", "2000m");
 		   // conf.set("spark.cleaner.periodicGC.interval", "1min");
 
 		JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(1));
@@ -110,7 +110,6 @@ public class SparkMain {
 								SparkMain.on_RDD(data,beforesparktime);
 							}
 						});
-						rdd.unpersist();
 					}
 			);
 	        try {
