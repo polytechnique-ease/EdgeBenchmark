@@ -71,7 +71,7 @@ public class SparkMain {
 		conf.setMaster("spark://132.207.170.59:7077");
 		conf.set("spark.executor.memory", "2g");
 		conf.set("spark.driver.memory", "2g");
-		JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(1));
+		JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(5));
 		jssc.sparkContext().setLogLevel("WARN");
 		String brokerUrl = "tcp://132.207.170.59:1883";
 		//jssc.checkpoint("checkpoint");
