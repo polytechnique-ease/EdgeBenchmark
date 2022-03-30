@@ -89,7 +89,7 @@ public class SparkMain {
 		sensorDetailsStream.foreachRDD(
 				(VoidFunction2<JavaRDD<JSONObject>, Time>) (rdd, time) -> {
 					String beforesparktime = time.toString() ;
-					rdd.persist(StorageLevel.MEMORY_AND_DISK());
+					//rdd.persist(StorageLevel.MEMORY_AND_DISK());
 					rdd.foreach(new VoidFunction<JSONObject>() {
 
 						@Override
