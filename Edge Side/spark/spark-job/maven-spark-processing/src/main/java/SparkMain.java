@@ -10,7 +10,7 @@ import org.apache.spark.streaming.Time;
 import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaReceiverInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
-import java.io.IOException; 
+import java.io.IOException;
 import org.apache.spark.streaming.mqtt.MQTTUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,12 +28,25 @@ import com.influxdb.client.write.Point;
 import com.influxdb.query.FluxRecord;
 import com.influxdb.query.FluxTable;
 public class SparkMain {
-	  private static char[] token = "H0mkVl01ROTMjNDn0JvbuBQWCfZT1ci5gKjJa-BwEdW0mRRc5VV8c8MdjFU63x8dvGwolNmuTEB0j6XVVA0Vaw==".toCharArray();
-	  private static String org = "polymtl";
-	  private static String bucket = "sensors";
-	  private static WriteApiBlocking writeApi ;
+	private static char[] token = "H0mkVl01ROTMjNDn0JvbuBQWCfZT1ci5gKjJa-BwEdW0mRRc5VV8c8MdjFU63x8dvGwolNmuTEB0j6XVVA0Vaw==".toCharArray();
+	private static String org = "polymtl";
+	private static String bucket = "sensors";
 	public static void on_RDD(JSONObject data , String beforesparktime ){
 
+		OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient().newBuilder()
+				//	.connectTimeout(40, TimeUnit.SECONDS)
+				//	.readTimeout(60, TimeUnit.SECONDS)
+				//	.writeTimeout(60, TimeUnit.SECONDS)
+				;
+		InfluxDBClientOptions options = InfluxDBClientOptions.builder()
+				.url("http://132.207.170.25:8086")
+				.okHttpClient(okHttpClientBuilder)
+				.authenticateToken(token)
+				.org(org)
+				.bucket(bucket)
+				.build();
+		InfluxDBClient influxDBClient = InfluxDBClientFactory.create(options);
+		WriteApiBlocking writeApi = influxDBClient.getWriteApiBlocking();
 
 		Point point = Point.measurement(data.getString("measurement_name")).addTag("camera_id", data.getString("camera_id") ).addField("location", "Main Lobby")
 
@@ -52,70 +65,49 @@ public class SparkMain {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-			
-			SparkConf conf = new SparkConf().setAppName("sensors");
-			conf.setMaster("spark://132.207.170.59:7077");
-		    conf.set("spark.executor.memory", "1g");
 
+		SparkConf conf = new SparkConf().setAppName("sensors");
+		conf.setMaster("spark://132.207.170.59:7077");
+		conf.set("spark.executor.memory", "2g");
 		JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(1));
-			jssc.sparkContext().setLogLevel("WARN");
+		jssc.sparkContext().setLogLevel("WARN");
+		String brokerUrl = "tcp://132.207.170.59:1883";
+		//jssc.checkpoint("checkpoint");
+		String topic = "topic";
+		JavaReceiverInputDStream<String> mqttStream = MQTTUtils.createStream(jssc, brokerUrl, topic);
 
-	        String brokerUrl = "tcp://132.207.170.59:1883";
-			//jssc.checkpoint("checkpoint");
-	        String topic = "topic";
+		JavaDStream<JSONObject> sensorDetailsStream = mqttStream.map(x -> {
+			try {
+				return new JSONObject(x);
+			}catch (JSONException err){
+				System.out.println(err);
+			}
+			return null;
+		});
+		sensorDetailsStream.foreachRDD(
+				(VoidFunction2<JavaRDD<JSONObject>, Time>) (rdd, time) -> {
+					String beforesparktime = time.toString() ;
+					rdd.foreach(new VoidFunction<JSONObject>() {
 
+						@Override
+						public void call(JSONObject data) throws Exception {
+							System.out.println("-------------------------------------------");
+							System.out.println("Time " + beforesparktime +":");
+							System.out.println("-------------------------------------------");
+							System.out.println(" Saving data of frame id :" + data.getString("frame_id") );
 
-		OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient().newBuilder()
-				//	.connectTimeout(40, TimeUnit.SECONDS)
-				//	.readTimeout(60, TimeUnit.SECONDS)
-				//	.writeTimeout(60, TimeUnit.SECONDS)
-				;
+							SparkMain.on_RDD(data,beforesparktime); ;
 
-		InfluxDBClientOptions options = InfluxDBClientOptions.builder()
-				.url("http://132.207.170.25:8086")
-				.okHttpClient(okHttpClientBuilder)
-				.authenticateToken(token)
-				.org(org)
-				.bucket(bucket)
-				.build();
-		InfluxDBClient influxDBClient = InfluxDBClientFactory.create(options);
-		writeApi = influxDBClient.getWriteApiBlocking();
-
-
-	        JavaReceiverInputDStream<String> mqttStream = MQTTUtils.createStream(jssc, brokerUrl, topic);
-	        
-	        JavaDStream<JSONObject> sensorDetailsStream = mqttStream.map(x -> {
-	            try {
-	                return new JSONObject(x);
-	            }catch (JSONException err){
-	                System.out.println(err);
-	            }
-	            return null;
-	        });
-	        sensorDetailsStream.foreachRDD(
-					(VoidFunction2<JavaRDD<JSONObject>, Time>) (rdd, time) -> {
-						String beforesparktime = time.toString() ;
-						rdd.foreach(new VoidFunction<JSONObject>() {
-
-							@Override
-							public void call(JSONObject data) throws Exception {
-								System.out.println("-------------------------------------------");
-								System.out.println("Time " + beforesparktime +":");
-								System.out.println("-------------------------------------------");
-								System.out.println(" Saving data of frame id :" + data.getString("frame_id") );
-
-								SparkMain.on_RDD(data,beforesparktime); ;
-
-							}
-						});
-					}
-			);
-	        try {
-	            jssc.start();
-	            jssc.awaitTermination();
-	        } catch (InterruptedException e) {
-	            e.printStackTrace();
-	        }
+						}
+					});
+				}
+		);
+		try {
+			jssc.start();
+			jssc.awaitTermination();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
