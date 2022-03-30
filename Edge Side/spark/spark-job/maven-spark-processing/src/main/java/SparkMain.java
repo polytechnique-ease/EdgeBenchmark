@@ -76,7 +76,7 @@ public class SparkMain {
 		String brokerUrl = "tcp://132.207.170.59:1883";
 		//jssc.checkpoint("checkpoint");
 		String topic = "topic";
-		JavaReceiverInputDStream<String> mqttStream = MQTTUtils.createStream(jssc, brokerUrl, topic);
+		JavaReceiverInputDStream<String> mqttStream = MQTTUtils.createStream(jssc, brokerUrl, topic, StorageLevel.DISK_ONLY());
 
 		JavaDStream<JSONObject> sensorDetailsStream = mqttStream.map(x -> {
 			try {
@@ -89,7 +89,6 @@ public class SparkMain {
 		sensorDetailsStream.foreachRDD(
 				(VoidFunction2<JavaRDD<JSONObject>, Time>) (rdd, time) -> {
 					String beforesparktime = time.toString() ;
-					//rdd.persist(StorageLevel.MEMORY_AND_DISK());
 					rdd.foreach(new VoidFunction<JSONObject>() {
 
 						@Override
