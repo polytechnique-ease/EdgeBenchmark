@@ -73,7 +73,7 @@ public class SparkMain {
 		conf.set("spark.driver.memory", "2g");
 		JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(5));
 		jssc.sparkContext().setLogLevel("WARN");
-		String brokerUrl = "tcp://132.207.170.59:1883";
+		String brokerUrl = "tcp://localhost:1883";
 		//jssc.checkpoint("checkpoint");
 		String topic = "topic";
 		JavaReceiverInputDStream<String> mqttStream = MQTTUtils.createStream(jssc, brokerUrl, topic, StorageLevel.MEMORY_AND_DISK());
