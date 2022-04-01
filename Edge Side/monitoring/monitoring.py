@@ -139,7 +139,7 @@ class DockerMonitoring():
                                   'net_tx': float(self.get_network_throughput(container_stats)['tx'])}
                 json_body = [
                               {
-                              "measurement": "cmod_100_12",
+                              "measurement": "cllient_1_2",
                               "tags": {
                               "container_name": name,
                               "short_id": cont.short_id
@@ -177,7 +177,7 @@ class DockerMonitoring():
         
         json_body = [
              {
-              "measurement": "cmod_100_12",
+              "measurement": "cllient_1_2",
                "tags": {
                 "host": "rpi",
                 "region": "us-west"

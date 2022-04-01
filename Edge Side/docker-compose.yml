@@ -6,10 +6,12 @@ services:
     env_file:
       - edge-variables.env
     container_name: mosquitto
+    volumes:
+      - ./mosquitto.conf:/mosquitto.conf:ro
     restart: always
     ports:
       - "1883:1883"
-    command: mosquitto -c /mosquitto-no-auth.conf
+    command: mosquitto -c /mosquitto.conf
   sparkmaster: 
     image: mahsahadian/spark-master
     container_name: sparkmaster
@@ -21,10 +23,10 @@ services:
       - "7077:7077"
   sparkworker: 
     image: mahsahadian/spark-worker
-    container_name: sparkworker
     restart: always
-    ports:
-      - "8081:8081"    
+    # ports:
+    #   - "8081:8081"
+    #   - "4040:4040"
     depends_on:
       - sparkmaster
     env_file:
@@ -33,7 +35,7 @@ services:
     image: mahsahadian/spark-job
     container_name: sparkjob
     depends_on:
-      - sparkworker
+      - sparkmaster
     env_file:
       - edge-variables.env
 
