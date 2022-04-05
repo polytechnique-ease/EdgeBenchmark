@@ -29,9 +29,9 @@ import com.influxdb.client.write.Point;
 import com.influxdb.query.FluxRecord;
 import com.influxdb.query.FluxTable;
 public class SparkMain {
-	private static char[] token = "H0mkVl01ROTMjNDn0JvbuBQWCfZT1ci5gKjJa-BwEdW0mRRc5VV8c8MdjFU63x8dvGwolNmuTEB0j6XVVA0Vaw==".toCharArray();
+	private static char[] token = "eX7DNDEOP-OpE_3Amz2Yi2P7oiUeaufmF2DakNCa3ljHDBccPpHW86QTAI1Prd0txBqYPEl1sbHUvUSjVknZng==".toCharArray();
 	private static String org = "polymtl";
-	private static String bucket = "sensors";
+	private static String bucket = "sensors1";
 	public static void on_RDD(JSONObject data , String beforesparktime ){
 
 		OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient().newBuilder()
@@ -73,7 +73,7 @@ public class SparkMain {
 		conf.set("spark.driver.memory", "2g");
 		JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(5));
 		jssc.sparkContext().setLogLevel("WARN");
-		String brokerUrl = "tcp://localhost:1883";
+		String brokerUrl = "tcp://132.207.170.59:1883";
 		//jssc.checkpoint("checkpoint");
 		String topic = "topic";
 		JavaReceiverInputDStream<String> mqttStream = MQTTUtils.createStream(jssc, brokerUrl, topic, StorageLevel.MEMORY_AND_DISK());
