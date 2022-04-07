@@ -28,6 +28,7 @@ import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.Point;
 import com.influxdb.query.FluxRecord;
 import com.influxdb.query.FluxTable;
+import org.apache.spark.api.java.function.Function;
 public class SparkMain {
 	private static char[] token = "eX7DNDEOP-OpE_3Amz2Yi2P7oiUeaufmF2DakNCa3ljHDBccPpHW86QTAI1Prd0txBqYPEl1sbHUvUSjVknZng==".toCharArray();
 	private static String org = "polymtl";
@@ -74,7 +75,7 @@ public class SparkMain {
 		JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(5));
 		jssc.sparkContext().setLogLevel("WARN");
 		String brokerUrl = "tcp://132.207.170.59:1883";
-		//jssc.checkpoint("checkpoint");
+		//jssc.checkpoint("/checkpoint");
 		String topic = "topic";
 		JavaReceiverInputDStream<String> mqttStream = MQTTUtils.createStream(jssc, brokerUrl, topic, StorageLevel.MEMORY_AND_DISK());
 
@@ -86,7 +87,13 @@ public class SparkMain {
 			}
 			return null;
 		});
-		sensorDetailsStream.foreachRDD(
+		JavaDStream<JSONObject> sensorDetailsStreamfiltered = sensorDetailsStream.filter(new Function<JSONObject, Boolean>() {
+			public Boolean call(JSONObject data) {
+
+				return data.getInt("size") < 148000 && data.getInt("size") > 141000   ;
+			}});
+
+		sensorDetailsStreamfiltered.foreachRDD(
 				(VoidFunction2<JavaRDD<JSONObject>, Time>) (rdd, time) -> {
 					String beforesparktime = time.toString() ;
 					rdd.foreach(new VoidFunction<JSONObject>() {
