@@ -1,2 +1,3 @@
-SparkMain$2.class
-SparkMain$1.class
+models/SensorData.class
+DbConnection/DbManager.class
+DbConnection/InfluxDbManager.class

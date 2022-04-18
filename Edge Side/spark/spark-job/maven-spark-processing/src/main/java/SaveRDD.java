@@ -9,12 +9,15 @@ import org.json.JSONObject;
 import java.io.*;
 
 
-public class SaveRDD  implements VoidFunction2<JavaRDD<JSONObject>, Time>, Serializable {
+public class SaveRDD  implements VoidFunction2<JavaRDD<JSONObject>, Time>, Externalizable {
 
     private DbManager dbManager ;
 
     public SaveRDD (DbManager dbManager){
         this.dbManager = dbManager ;
+    }
+    public SaveRDD(){
+       this.dbManager = new InfluxDbManager();
     }
 
     @Override
@@ -46,5 +49,12 @@ public class SaveRDD  implements VoidFunction2<JavaRDD<JSONObject>, Time>, Seria
             }
         });
 
+    }
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
     }
 }
