@@ -24,9 +24,9 @@ services:
   sparkworker: 
     image: mahsahadian/spark-worker
     restart: always
-    #ports:
-    #  - "8081:8081"
-    #   - "4040:4040"
+    ports:
+      - "8081:8081"
+      - "4040:4040"
     depends_on:
       - sparkmaster
     env_file:

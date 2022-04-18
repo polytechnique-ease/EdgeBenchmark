@@ -38,7 +38,7 @@ public class SparkMain {
 		OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient().newBuilder()
 				//	.connectTimeout(40, TimeUnit.SECONDS)
 				//	.readTimeout(60, TimeUnit.SECONDS)
-				//	.writeTimeout(60, TimeUnit.SECONDS)
+					.writeTimeout(60, TimeUnit.SECONDS)
 				;
 		InfluxDBClientOptions options = InfluxDBClientOptions.builder()
 				.url("http://132.207.170.25:8086")
@@ -70,8 +70,10 @@ public class SparkMain {
 
 		SparkConf conf = new SparkConf().setAppName("sensors");
 		conf.setMaster("spark://132.207.170.59:7077");
-		conf.set("spark.executor.memory", "2g");
+		conf.set("spark.executor.memory", "1g");
 		conf.set("spark.driver.memory", "2g");
+		conf.set("spark.memory.fraction","0.9");
+		conf.set("spark.memory.storageFraction","0.2");
 		JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(5));
 		jssc.sparkContext().setLogLevel("WARN");
 		String brokerUrl = "tcp://132.207.170.59:1883";
@@ -105,8 +107,7 @@ public class SparkMain {
 							System.out.println("-------------------------------------------");
 							System.out.println(" Saving data of frame id :" + data.getString("frame_id") );
 
-							SparkMain.on_RDD(data,beforesparktime); ;
-
+							SparkMain.on_RDD(data,beforesparktime);
 						}
 					});
 				}
