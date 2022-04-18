@@ -51,7 +51,8 @@ public class SaveRDD  implements VoidFunction2<JavaRDD<JSONObject>, Time>, Exter
                         data.getString("transmitdelay"),
                         data.getString("JPGQuality")
                 );
-                dbManager.save(sensorData);
+
+                SaveRDD.dbManager.save(sensorData);
                 //sensorData = null ;
                 //System.gc();
             }
