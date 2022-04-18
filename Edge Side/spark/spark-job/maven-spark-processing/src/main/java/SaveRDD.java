@@ -10,7 +10,8 @@ import DbConnection.InfluxDbManager;
 import java.io.*;
 
 
-public class SaveRDD  implements VoidFunction2<JavaRDD<JSONObject>, Time>, Externalizable {
+//public class SaveRDD  implements VoidFunction2<JavaRDD<JSONObject>, Time>, Externalizable {
+public class SaveRDD  implements VoidFunction2<JavaRDD<JSONObject>, Time>, Serializable {
 
     private DbManager dbManager ;
 
@@ -55,11 +56,12 @@ public class SaveRDD  implements VoidFunction2<JavaRDD<JSONObject>, Time>, Exter
         });
 
     }
-    @Override
+ /*   @Override
     public void writeExternal(ObjectOutput out) throws IOException {
     }
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-    }
+    }*/
+
 }
