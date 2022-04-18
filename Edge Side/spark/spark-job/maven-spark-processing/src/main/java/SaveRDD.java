@@ -5,7 +5,8 @@ import org.apache.spark.api.java.function.VoidFunction;
 import org.apache.spark.api.java.function.VoidFunction2;
 import org.apache.spark.streaming.Time;
 import org.json.JSONObject;
-
+import DbConnection.DbManager;
+import DbConnection.InfluxDbManager;
 import java.io.*;
 
 
@@ -18,6 +19,10 @@ public class SaveRDD  implements VoidFunction2<JavaRDD<JSONObject>, Time>, Exter
     }
     public SaveRDD(){
        this.dbManager = new InfluxDbManager();
+       	char[] token = "eX7DNDEOP-OpE_3Amz2Yi2P7oiUeaufmF2DakNCa3ljHDBccPpHW86QTAI1Prd0txBqYPEl1sbHUvUSjVknZng==".toCharArray();
+		String org = "polymtl";
+	    String bucket = "sensors1";
+		dbManager.connect(token,org,bucket);
     }
 
     @Override

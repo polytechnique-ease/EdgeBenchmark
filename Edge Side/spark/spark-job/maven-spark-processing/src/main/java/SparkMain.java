@@ -26,7 +26,8 @@ public class SparkMain {
 		//jssc.checkpoint("/checkpoint");
 		String topic = "topic";
 		DbManager dbManager = new InfluxDbManager();
-		char[] token = "eX7DNDEOP-OpE_3Amz2Yi2P7oiUeaufmF2DakNCa3ljHDBccPpHW86QTAI1Prd0txBqYPEl1sbHUvUSjVknZng==".toCharArray();String org = "polymtl";
+		char[] token = "eX7DNDEOP-OpE_3Amz2Yi2P7oiUeaufmF2DakNCa3ljHDBccPpHW86QTAI1Prd0txBqYPEl1sbHUvUSjVknZng==".toCharArray();
+		String org = "polymtl";
 	    String bucket = "sensors1";
 		dbManager.connect(token,org,bucket);
 
