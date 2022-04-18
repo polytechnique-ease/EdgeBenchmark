@@ -5,13 +5,11 @@ import org.apache.spark.api.java.function.VoidFunction;
 import org.apache.spark.api.java.function.VoidFunction2;
 import org.apache.spark.streaming.Time;
 import org.json.JSONObject;
-import DbConnection.DbManager;
 import DbConnection.InfluxDbManager;
 import java.io.*;
 
 
-//public class SaveRDD  implements VoidFunction2<JavaRDD<JSONObject>, Time>, Externalizable {
-public class SaveRDD  implements VoidFunction2<JavaRDD<JSONObject>, Time>, Serializable {
+public class SaveRDD  implements VoidFunction2<JavaRDD<JSONObject>, Time>, Externalizable {
 
     private DbManager dbManager ;
 
@@ -56,12 +54,11 @@ public class SaveRDD  implements VoidFunction2<JavaRDD<JSONObject>, Time>, Seria
         });
 
     }
- /*   @Override
+    @Override
     public void writeExternal(ObjectOutput out) throws IOException {
     }
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-    }*/
-
+    }
 }
