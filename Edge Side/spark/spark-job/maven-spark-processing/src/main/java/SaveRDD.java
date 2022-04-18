@@ -14,9 +14,6 @@ public class SaveRDD  implements VoidFunction2<JavaRDD<JSONObject>, Time>, Exter
     private static DbManager dbManager ;
 
 
-    public SaveRDD (DbManager dbManager){
-        this.dbManager = dbManager ;
-    }
     public SaveRDD(){
         if (SaveRDD.dbManager == null){
             SaveRDD.dbManager = new InfluxDbManager();
