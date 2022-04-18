@@ -10,6 +10,7 @@ import okhttp3.OkHttpClient;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.concurrent.TimeUnit;
 
 public class InfluxDbManager implements DbManager {
     WriteApiBlocking writeApi ;
@@ -19,7 +20,7 @@ public class InfluxDbManager implements DbManager {
         OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient().newBuilder()
                 //	.connectTimeout(40, TimeUnit.SECONDS)
                 //	.readTimeout(60, TimeUnit.SECONDS)
-                //	.writeTimeout(60, TimeUnit.SECONDS)
+                	.writeTimeout(60, TimeUnit.SECONDS)
                 ;
 
         InfluxDBClientOptions options = InfluxDBClientOptions.builder()

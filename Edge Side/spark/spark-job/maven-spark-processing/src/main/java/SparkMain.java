@@ -1,5 +1,3 @@
-import DbConnection.DbManager;
-import DbConnection.InfluxDbManager;
 import org.apache.spark.SparkConf;
 import org.apache.spark.storage.StorageLevel;
 import org.apache.spark.streaming.Durations;
@@ -18,18 +16,14 @@ public class SparkMain {
 
 		SparkConf conf = new SparkConf().setAppName("sensors");
 		conf.setMaster("spark://132.207.170.59:7077");
-		conf.set("spark.executor.memory", "2g");
+		conf.set("spark.executor.memory", "1g");
 		conf.set("spark.driver.memory", "2g");
+		conf.set("spark.memory.fraction","0.9");
+		conf.set("spark.memory.storageFraction","0.2");
 		JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(5));
 		jssc.sparkContext().setLogLevel("WARN");
 		String brokerUrl = "tcp://132.207.170.59:1883";
-		//jssc.checkpoint("/checkpoint");
 		String topic = "topic";
-		DbManager dbManager = new InfluxDbManager();
-		char[] token = "eX7DNDEOP-OpE_3Amz2Yi2P7oiUeaufmF2DakNCa3ljHDBccPpHW86QTAI1Prd0txBqYPEl1sbHUvUSjVknZng==".toCharArray();
-		String org = "polymtl";
-	    String bucket = "sensors1";
-		dbManager.connect(token,org,bucket);
 
 		JavaReceiverInputDStream<String> mqttStream = MQTTUtils.createStream(jssc, brokerUrl, topic, StorageLevel.MEMORY_AND_DISK());
 
