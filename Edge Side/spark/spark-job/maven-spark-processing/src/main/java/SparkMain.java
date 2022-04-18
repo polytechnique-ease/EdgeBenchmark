@@ -25,6 +25,11 @@ public class SparkMain {
 		String brokerUrl = "tcp://132.207.170.59:1883";
 		//jssc.checkpoint("/checkpoint");
 		String topic = "topic";
+		DbManager dbManager = new InfluxDbManager();
+		char[] token = "eX7DNDEOP-OpE_3Amz2Yi2P7oiUeaufmF2DakNCa3ljHDBccPpHW86QTAI1Prd0txBqYPEl1sbHUvUSjVknZng==".toCharArray();
+		String org = "polymtl";
+	    String bucket = "sensors1";
+		dbManager.connect(token,org,bucket);
 
 		JavaReceiverInputDStream<String> mqttStream = MQTTUtils.createStream(jssc, brokerUrl, topic, StorageLevel.MEMORY_AND_DISK());
 
@@ -39,7 +44,7 @@ public class SparkMain {
 		JavaDStream<JSONObject> sensorDetailsStreamfiltered = sensorDetailsStream
 				.filter((JSONObject data) -> data.getInt("size") < 148000 && data.getInt("size") > 141000) ;
 
-		sensorDetailsStreamfiltered.foreachRDD(new SaveRDD());
+		sensorDetailsStreamfiltered.foreachRDD(new SaveRDD(dbManager));
 		try {
 			jssc.start();
 			jssc.awaitTermination();
