@@ -44,7 +44,7 @@ public class SparkMain {
 		JavaDStream<JSONObject> sensorDetailsStreamfiltered = sensorDetailsStream
 				.filter((JSONObject data) -> data.getInt("size") < 148000 && data.getInt("size") > 141000) ;
 
-		sensorDetailsStreamfiltered.foreachRDD(new SaveRDD(dbManager));
+		sensorDetailsStreamfiltered.foreachRDD(new SaveRDD());
 		try {
 			jssc.start();
 			jssc.awaitTermination();
