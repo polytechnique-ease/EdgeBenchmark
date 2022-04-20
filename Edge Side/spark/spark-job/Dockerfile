@@ -30,6 +30,8 @@ ENV PATH $PATH:/opt/spark/bin:/opt/spark/sbin
 COPY edge-variables.env /edge-variables.env
 RUN mvn dependency:get -Dartifact=com.influxdb:influxdb-client-java:4.3.0
 RUN mvn dependency:get -Dartifact=org.apache.bahir:spark-streaming-mqtt_2.11:2.4.0
+RUN mvn dependency:get -Dartifact=com.drewnoakes:metadata-extractor:2.17.0
 COPY maven-spark-processing/target/maven-spark-processing-1.0-SNAPSHOT.jar /
 
-ENTRYPOINT spark-submit  --packages com.influxdb:influxdb-client-java:4.3.0,org.apache.bahir:spark-streaming-mqtt_2.11:2.4.0  --class SparkMain maven-spark-processing-1.0-SNAPSHOT.jar && tail -f /dev/null
+ENTRYPOINT spark-submit  --packages com.influxdb:influxdb-client-java:4.3.0,org.apache.bahir:spark-streaming-mqtt_2.11:2.4.0,com.drewnoakes:metadata-extractor:2.17.0  --class SparkMain maven-spark-processing-1.0-SNAPSHOT.jar && tail -f /dev/null
+#ENTRYPOINT spark-submit  --packages com.influxdb:influxdb-client-java:4.3.0,org.apache.bahir:spark-streaming-mqtt_2.11:2.4.0 --class SparkMain maven-spark-processing-1.0-SNAPSHOT.jar && tail -f /dev/null

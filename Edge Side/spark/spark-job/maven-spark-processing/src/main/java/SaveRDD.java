@@ -13,6 +13,7 @@ import DbConnection.InfluxDbManager;
 import java.io.*;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.imaging.jpeg.JpegMetadataReader;
+import com.drew.imaging.ImageMetadataReader;
 
 
 public class SaveRDD  implements VoidFunction2<JavaRDD<JSONObject>, Time>, Externalizable {
@@ -42,6 +43,8 @@ public class SaveRDD  implements VoidFunction2<JavaRDD<JSONObject>, Time>, Exter
                 System.out.println("Time " + beforesparktime +":");
                 System.out.println("-------------------------------------------");
                 System.out.println(" Saving data of frame id :" + data.getString("frame_id") );
+                System.out.println("here 1");
+
 
                 SensorData sensorData = new SensorData(
                         data.getString("measurement_name"),
@@ -53,6 +56,8 @@ public class SaveRDD  implements VoidFunction2<JavaRDD<JSONObject>, Time>, Exter
                         data.getString("transmitdelay"),
                         data.getString("JPGQuality")
                 );
+                            System.out.println("here 1");
+                System.out.println("here 2");
                 extractInfos(data.getString("value"),data.getString("count"));
                 SaveRDD.dbManager.save(sensorData);
             }
@@ -72,8 +77,10 @@ public class SaveRDD  implements VoidFunction2<JavaRDD<JSONObject>, Time>, Exter
         // (CRW/CR2/NEF/RW2/ORF) files and extract whatever metadata is available and understood.
         //
         try {
-            byte[] data = Base64.decodeBase64(image);
-            String path = "./imagesout/frame" + count +".jpg";
+            System.out.println("here 3");
+           byte[] data = Base64.decodeBase64(image);
+            String path = "frame" + count +".jpg";
+            System.out.println("here 4");
 
 
             try (OutputStream stream = new FileOutputStream(path)) {
@@ -81,11 +88,13 @@ public class SaveRDD  implements VoidFunction2<JavaRDD<JSONObject>, Time>, Exter
                 stream.flush();
                 stream.close();
             }
-
+            System.out.println("here 5");
             File file = new File(path);
-            Metadata metadata = JpegMetadataReader.readMetadata(file);
+            Metadata metadata = ImageMetadataReader.readMetadata(file);
 
             print(metadata, "Using ImageMetadataReader");
+            System.out.println("here 6");
+
         } catch (ImageProcessingException | IOException e) {
             print(e);
         }
