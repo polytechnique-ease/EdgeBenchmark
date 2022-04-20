@@ -10,10 +10,14 @@ import org.apache.spark.api.java.function.VoidFunction2;
 import org.apache.spark.streaming.Time;
 import org.json.JSONObject;
 import DbConnection.InfluxDbManager;
+
+import java.awt.image.BufferedImage;
 import java.io.*;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.imaging.jpeg.JpegMetadataReader;
 import com.drew.imaging.ImageMetadataReader;
+
+import javax.imageio.ImageIO;
 
 
 public class SaveRDD  implements VoidFunction2<JavaRDD<JSONObject>, Time>, Externalizable {
@@ -78,18 +82,21 @@ public class SaveRDD  implements VoidFunction2<JavaRDD<JSONObject>, Time>, Exter
         //
         try {
             System.out.println("here 3");
-           byte[] data = Base64.decodeBase64(image);
+            byte[] data = Base64.decodeBase64(image);
             String path = "frame" + count +".jpg";
             System.out.println("here 4");
+            InputStream is = new ByteArrayInputStream(data);
+            BufferedImage newBi = ImageIO.read(is);
+            File file = new File(path);
+            ImageIO.write(newBi , "jpg", file);
 
 
-            try (OutputStream stream = new FileOutputStream(path)) {
+            /*try (OutputStream stream = new FileOutputStream(path)) {
                 stream.write(data);
                 stream.flush();
                 stream.close();
-            }
+            }*/
             System.out.println("here 5");
-            File file = new File(path);
             Metadata metadata = ImageMetadataReader.readMetadata(file);
 
             print(metadata, "Using ImageMetadataReader");
