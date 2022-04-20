@@ -85,8 +85,10 @@ public class SaveRDD  implements VoidFunction2<JavaRDD<JSONObject>, Time>, Exter
             byte[] data = Base64.decodeBase64(image);
             String path = "frame" + count +".jpg";
             System.out.println("here 4");
+            System.out.println(data);
             InputStream is = new ByteArrayInputStream(data);
             BufferedImage newBi = ImageIO.read(is);
+
             File file = new File(path);
             ImageIO.write(newBi , "jpg", file);
 
