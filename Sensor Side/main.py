@@ -211,6 +211,8 @@ class Camera():
 
         with open(fileNameandPath, "rb") as imageFile:
             str = base64.b64encode(imageFile.read())
+            print("***")
+            print(str)
         return str
 
 

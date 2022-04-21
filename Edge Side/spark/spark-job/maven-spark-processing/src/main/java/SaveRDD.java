@@ -84,11 +84,12 @@ public class SaveRDD  implements VoidFunction2<JavaRDD<JSONObject>, Time>, Exter
         //
         try {
             byte[] data =  Base64.getDecoder().decode(image);
+            //byte[] data = image.getBytes();
 
             InputStream is = new ByteArrayInputStream(data);
             BufferedImage newBi = ImageIO.read(is);
 
-            File file = new File("profile.jpg");
+            File file = new File("/profile.jpg");
             ImageIO.write(newBi , "jpg", file);
 
             Metadata metadata = ImageMetadataReader.readMetadata(file);
