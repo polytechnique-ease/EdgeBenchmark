@@ -3,7 +3,6 @@ import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.Tag;
 import models.SensorData;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.VoidFunction;
 import org.apache.spark.api.java.function.VoidFunction2;
@@ -13,6 +12,8 @@ import DbConnection.InfluxDbManager;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.Base64;
+
 import com.drew.imaging.ImageProcessingException;
 import com.drew.imaging.jpeg.JpegMetadataReader;
 import com.drew.imaging.ImageMetadataReader;
@@ -68,6 +69,7 @@ public class SaveRDD  implements VoidFunction2<JavaRDD<JSONObject>, Time>, Exter
         });
 
     }
+
     public void extractInfos(String image,String count){
 
 
@@ -81,24 +83,14 @@ public class SaveRDD  implements VoidFunction2<JavaRDD<JSONObject>, Time>, Exter
         // (CRW/CR2/NEF/RW2/ORF) files and extract whatever metadata is available and understood.
         //
         try {
-            System.out.println("here 3");
-            byte[] data = Base64.decodeBase64(image);
-            String path = "frame" + count +".jpg";
-            System.out.println("here 4");
-            System.out.println(data);
+            byte[] data =  Base64.getDecoder().decode(image);
+
             InputStream is = new ByteArrayInputStream(data);
             BufferedImage newBi = ImageIO.read(is);
 
-            File file = new File(path);
+            File file = new File("profile.jpg");
             ImageIO.write(newBi , "jpg", file);
 
-
-            /*try (OutputStream stream = new FileOutputStream(path)) {
-                stream.write(data);
-                stream.flush();
-                stream.close();
-            }*/
-            System.out.println("here 5");
             Metadata metadata = ImageMetadataReader.readMetadata(file);
 
             print(metadata, "Using ImageMetadataReader");
