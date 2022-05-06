@@ -13,6 +13,8 @@ import DbConnection.InfluxDbManager;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.Base64;
+import java.util.UUID;
+
 
 import com.drew.imaging.ImageProcessingException;
 import com.drew.imaging.jpeg.JpegMetadataReader;
@@ -48,7 +50,6 @@ public class SaveRDD  implements VoidFunction2<JavaRDD<JSONObject>, Time>, Exter
                 System.out.println("Time " + beforesparktime +":");
                 System.out.println("-------------------------------------------");
                 System.out.println(" Saving data of frame id :" + data.getString("frame_id") );
-                System.out.println("here 1");
 
 
                 SensorData sensorData = new SensorData(
@@ -61,8 +62,6 @@ public class SaveRDD  implements VoidFunction2<JavaRDD<JSONObject>, Time>, Exter
                         data.getString("transmitdelay"),
                         data.getString("JPGQuality")
                 );
-                            System.out.println("here 1");
-                System.out.println("here 2");
                 extractInfos(data.getString("value"),data.getString("count"));
                 SaveRDD.dbManager.save(sensorData);
             }
@@ -88,14 +87,15 @@ public class SaveRDD  implements VoidFunction2<JavaRDD<JSONObject>, Time>, Exter
 
             InputStream is = new ByteArrayInputStream(data);
             BufferedImage newBi = ImageIO.read(is);
+            String uniqueID = UUID.randomUUID().toString();
 
-            File file = new File("/profile.jpg");
+            File file = new File("/frame" + uniqueID + ".jpg");
             ImageIO.write(newBi , "jpg", file);
 
             Metadata metadata = ImageMetadataReader.readMetadata(file);
 
             print(metadata, "Using ImageMetadataReader");
-            System.out.println("here 6");
+            file.delete();
 
         } catch (ImageProcessingException | IOException e) {
             print(e);
