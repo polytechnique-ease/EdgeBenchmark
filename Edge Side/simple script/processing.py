@@ -7,24 +7,28 @@ import ast
 
 load_dotenv("sensor-variables.env")
 
-
+count = 0 
 myclient = pymongo.MongoClient("mongodb://root:example@" + os.getenv('INFLUXDB_DATABASE_IP') +":27017/")
 mydb = myclient["applicationdb"]
 mycol = mydb["sensors"]
+cname = "Client"
+client = mqtt.Client(cname)
 
 
 def on_connect(client, userdata, flags, rc):
     """ The callback for when the client receives a CONNACK response from the server."""
     print('Connected with result code ' + str(rc))
-  #  client.subscribe('topic')
+    client.subscribe('topic')
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
     #current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     #print(msg)
     #timestamp = str(time.time())
-    print(msg.topic + ' ' + str(msg.payload))
-    mycol.insert_one(ast.literal_eval(msg.payload))
-
+    #print(msg.topic + ' ' + str(msg.payload))
+    x = mycol.insert_one(ast.literal_eval(msg.payload))
+    global count 
+    count = count + 1 
+    print(count)
     #sensor_data = _parse_mqtt_message(msg.topic, msg.payload.decode('utf-8'))
     #if sensor_data is not None:
     #    _send_sensor_data_to_influxdb(sensor_data)
@@ -65,11 +69,18 @@ def on_message(client, userdata, msg):
     #if int(val) == 2222:
     #    camera = Camera(camera_id, destination_cluster_ip, JPGQuality, transmitdelay, './imagesout')
     #    camera.processVideoStream()
-cname = "Client"
-client = mqtt.Client(cname)
+
+
+# Open a file with access mode 'a'
+#with open("count.txt", "a") as file_object:
+    # Append 'hello' at the end of file
+ #   file_object.write("\n")
+ #   file_object.write("")
+
 
 client.on_connect = on_connect
 client.on_message = on_message
 client.connect(os.getenv('MQTT_SERVER_IP'), int(os.getenv('MQTT_SERVER_PORT')), 60)
 client.subscribe("topic", qos=1)
+print("103 for sure")
 client.loop_forever()
