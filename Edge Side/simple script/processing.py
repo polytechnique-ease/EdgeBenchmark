@@ -5,7 +5,7 @@ import pymongo
 import ast
 
 
-load_dotenv("sensor-variables.env")
+load_dotenv("edge-variables.env")
 
 count = 0 
 myclient = pymongo.MongoClient("mongodb://root:example@" + os.getenv('INFLUXDB_DATABASE_IP') +":27017/")
