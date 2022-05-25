@@ -13,16 +13,19 @@ public class SparkMain {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-
+		
 		SparkConf conf = new SparkConf().setAppName("sensors");
-		conf.setMaster("spark://132.207.170.59:7077");
-		conf.set("spark.executor.memory", "1g");
-		conf.set("spark.driver.memory", "2g");
-		conf.set("spark.memory.fraction","0.9");
-		conf.set("spark.memory.storageFraction","0.2");
+		
+		
+
+		conf.setMaster("spark://" + System.getenv("MASTER_IP") +  ":" + System.getenv("MASTER_PORT") );
+		conf.set("spark.executor.memory", System.getenv("SPARK_EXECUTOR_MEMORY") );
+		conf.set("spark.driver.memory", System.getenv("SPARK_DRIVER_MEMORY"));
+		conf.set("spark.memory.fraction",System.getenv("SPARK_MEMORY_FRACTION"));
+		conf.set("spark.memory.storageFraction",System.getenv("SPARK_MEMORY_STORAGEFRACTION"));
 		JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(5));
-		jssc.sparkContext().setLogLevel("WARN");
-		String brokerUrl = "tcp://132.207.170.59:1883";
+		//jssc.sparkContext().setLogLevel("WARN");
+		String brokerUrl = System.getenv("MQTT_SERVER_IP") + ":" +  System.getenv("MQTT_SERVER_PORT") ;
 		String topic = "topic";
 
 		JavaReceiverInputDStream<String> mqttStream = MQTTUtils.createStream(jssc, brokerUrl, topic, StorageLevel.MEMORY_AND_DISK());
@@ -39,6 +42,7 @@ public class SparkMain {
 				.filter((JSONObject data) -> data.getInt("size") < 148000 && data.getInt("size") > 141000) ;
 
 		sensorDetailsStreamfiltered.foreachRDD(new SaveRDD());
+		
 		try {
 			jssc.start();
 			jssc.awaitTermination();

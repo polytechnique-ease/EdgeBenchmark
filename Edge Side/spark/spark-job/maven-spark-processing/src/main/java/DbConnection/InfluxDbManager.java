@@ -14,17 +14,22 @@ import java.util.concurrent.TimeUnit;
 
 public class InfluxDbManager implements DbManager {
     WriteApiBlocking writeApi ;
+    String url = System.getenv("INFLUXDB_PROTOCOL") + "://" +  System.getenv("INFLUXDB_IP") + ":" + System.getenv("INFLUXDB_PORT") ;
+    char[] token = "eX7DNDEOP-OpE_3Amz2Yi2P7oiUeaufmF2DakNCa3ljHDBccPpHW86QTAI1Prd0txBqYPEl1sbHUvUSjVknZng==".toCharArray();
+    char[] token = System.getenv("INFLUXDB_TOKEN").toCharArray();
+    String org = System.getenv("INFLUXDB_ORG").toCharArray();
+    String bucket = System.getenv("INFLUXDB_BUCKET").toCharArray();
 
     @Override
-    public void connect(char[] token, String org, String bucket) {
+    public void connect() {
         OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient().newBuilder()
                 //	.connectTimeout(40, TimeUnit.SECONDS)
                 //	.readTimeout(60, TimeUnit.SECONDS)
-                	.writeTimeout(60, TimeUnit.SECONDS)
+                	.writeTimeout(Integer.parseInt(System.getenv("INFLUXDB_WRITE_TIMEOUT")), TimeUnit.SECONDS)
                 ;
 
         InfluxDBClientOptions options = InfluxDBClientOptions.builder()
-                .url("http://132.207.170.25:8086")
+                .url(url)
                 .okHttpClient(okHttpClientBuilder)
                 .authenticateToken(token)
                 .org(org)

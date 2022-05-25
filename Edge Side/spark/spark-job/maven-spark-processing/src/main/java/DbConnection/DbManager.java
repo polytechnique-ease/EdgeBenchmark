@@ -4,7 +4,7 @@ import models.SensorData;
 
 public interface DbManager {
 
-     void connect(char[] token, String org, String bucket);
+     void connect();
      void save(SensorData data);
 
 }

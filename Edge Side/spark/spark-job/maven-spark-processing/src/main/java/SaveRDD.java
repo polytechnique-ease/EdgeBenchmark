@@ -30,10 +30,7 @@ public class SaveRDD  implements VoidFunction2<JavaRDD<JSONObject>, Time>, Exter
     public SaveRDD(){
         if (SaveRDD.dbManager == null){
             SaveRDD.dbManager = new InfluxDbManager();
-            char[] token = "eX7DNDEOP-OpE_3Amz2Yi2P7oiUeaufmF2DakNCa3ljHDBccPpHW86QTAI1Prd0txBqYPEl1sbHUvUSjVknZng==".toCharArray();
-            String org = "polymtl";
-            String bucket = "sensors1";
-            SaveRDD.dbManager.connect(token,org,bucket);
+            SaveRDD.dbManager.connect();
         }
 
     }

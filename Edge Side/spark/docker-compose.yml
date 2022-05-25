@@ -3,8 +3,6 @@ version: "3.8"
 services:
   mosquitto:
     image: eclipse-mosquitto:2.0.13
-    env_file:
-      - edge-variables.env
     container_name: mosquitto
     volumes:
       - ./mosquitto.conf:/mosquitto.conf
@@ -16,8 +14,6 @@ services:
     image: mahsahadian/spark-master
     container_name: sparkmaster
     restart: always
-    env_file:
-      - edge-variables.env
     ports:
       - "8080:8080"
       - "7077:7077"
@@ -27,12 +23,11 @@ services:
     depends_on:
       - sparkmaster
     env_file:
-      - edge-variables.env
+      - spark-edge-variables
   sparkjob: 
     image: mahsahadian/spark-job
     container_name: sparkjob
     depends_on:
       - sparkmaster
     env_file:
-      - edge-variables.env
-
+      - spark-edge-variables

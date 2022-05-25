@@ -5,12 +5,12 @@ import pymongo
 import ast
 
 
-load_dotenv("edge-variables.env")
+load_dotenv("simple-script-edge-variables.env")
 
 count = 0 
-myclient = pymongo.MongoClient("mongodb://root:example@" + os.getenv('INFLUXDB_DATABASE_IP') +":27017/")
-mydb = myclient["applicationdb"]
-mycol = mydb["sensors"]
+myclient = pymongo.MongoClient(f"mongodb://{os.getenv('MONGODB_DATABASE_USERNAME')}:{os.getenv('MONGODB_DATABASE_PASSWORD')}@{os.getenv('MONGODB_DATABASE_IP')} : {os.getenv('MONGODB_DATABASE_PORT')}/")
+mydb = myclient[os.getenv('MONGODB_DATABASE_NAME')]
+mycol = mydb[os.getenv('MONGODB_COLLECTION_NAME')]
 cname = "Client"
 client = mqtt.Client(cname)
 

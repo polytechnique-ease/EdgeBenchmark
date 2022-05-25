@@ -13,7 +13,7 @@ import json
 import requests
 
 
-load_dotenv("edge-variables.env")
+load_dotenv("monitoring-edge-variables.env")
 
 
 from influxdb import InfluxDBClient
