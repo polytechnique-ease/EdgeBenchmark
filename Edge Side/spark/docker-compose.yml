@@ -23,11 +23,11 @@ services:
     depends_on:
       - sparkmaster
     env_file:
-      - spark-edge-variables
+      - spark-edge-variables.env
   sparkjob: 
     image: mahsahadian/spark-job
     container_name: sparkjob
     depends_on:
       - sparkmaster
     env_file:
-      - spark-edge-variables
+      - spark-edge-variables.env

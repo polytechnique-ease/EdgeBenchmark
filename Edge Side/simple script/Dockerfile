@@ -1,4 +1,3 @@
-#Spark worker
 FROM arm32v7/ubuntu
 ENV TZ=America/Toronto
 
@@ -8,8 +7,9 @@ RUN apt-get update && apt-get install -y default-jdk scala git wget software-pro
 RUN add-apt-repository -y ppa:deadsnakes/ppa
 RUN apt-get update
 RUN apt-get install -y python3.8 python3-pip
-RUN pip3 install docker influxdb pytz python-dotenv
 
+COPY requirements.txt /requirements.txt
+RUN pip install -r requirements.txt
 
-COPY monitoring.py /monitoring.py
-ENTRYPOINT python3 /monitoring.py && tail -f /dev/null
+COPY processing.py /processing.py
+ENTRYPOINT python3 /processing.py && tail -f /dev/null

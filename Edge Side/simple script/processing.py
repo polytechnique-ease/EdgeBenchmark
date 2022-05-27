@@ -1,14 +1,15 @@
 import paho.mqtt.client as mqtt
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 import os 
 import pymongo
 import ast
 
 
-load_dotenv("simple-script-edge-variables.env")
+#load_dotenv("simple-script-edge-variables.env")
 
 count = 0 
-myclient = pymongo.MongoClient(f"mongodb://{os.getenv('MONGODB_DATABASE_USERNAME')}:{os.getenv('MONGODB_DATABASE_PASSWORD')}@{os.getenv('MONGODB_DATABASE_IP')} : {os.getenv('MONGODB_DATABASE_PORT')}/")
+myclient = pymongo.MongoClient(f"mongodb://{os.getenv('MONGODB_DATABASE_USERNAME')}:{os.getenv('MONGODB_DATABASE_PASSWORD')}@{os.getenv('MONGODB_DATABASE_IP')}:{os.getenv('MONGODB_DATABASE_PORT')}/")
+#myclient = pymongo.MongoClient("mongodb://root:example@132.207.170.25:27017/")
 mydb = myclient[os.getenv('MONGODB_DATABASE_NAME')]
 mycol = mydb[os.getenv('MONGODB_COLLECTION_NAME')]
 cname = "Client"
@@ -25,7 +26,7 @@ def on_message(client, userdata, msg):
     #print(msg)
     #timestamp = str(time.time())
     #print(msg.topic + ' ' + str(msg.payload))
-    x = mycol.insert_one(ast.literal_eval(msg.payload))
+    x = mycol.insert_one(ast.literal_eval(msg.payload.decode("utf-8")))
     global count 
     count = count + 1 
     print(count)
@@ -80,6 +81,7 @@ def on_message(client, userdata, msg):
 
 client.on_connect = on_connect
 client.on_message = on_message
+
 client.connect(os.getenv('MQTT_SERVER_IP'), int(os.getenv('MQTT_SERVER_PORT')), 60)
 client.subscribe("topic", qos=1)
 print("103 for sure")
