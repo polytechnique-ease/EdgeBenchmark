@@ -5,5 +5,5 @@ import DataSender
 dataSender = DataSender()
 folder = './imagesout'
 
-videoDataGenerator = Videogenerator(dataSender,"test","test","test",folder)
+videoDataGenerator = Videogenerator(dataSender,"test","50","test",folder)
 videoDataGenerator.generateData()

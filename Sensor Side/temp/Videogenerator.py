@@ -2,6 +2,7 @@ import Idatagenerator
 import os, cv2,json
 from datetime import *
 import paho.mqtt.client as mqtt
+
 class VideoGenerator(Idatagenerator):
 
 
@@ -13,8 +14,6 @@ class VideoGenerator(Idatagenerator):
         self.folder = folder   
 
     def cleanup(self):
-
-
         folder = './imagesout'
         for the_file in os.listdir ('./imagesout'):
             file_path = os.path.join ('./imagesout', the_file)
@@ -34,8 +33,6 @@ class VideoGenerator(Idatagenerator):
             print('JPGQuality:', self.JPGQuality)
             list_image_base64_str = ''
             while success:
-                #for i in range(9):
-                #self.JPGQuality = i + 1
                 cv2.imwrite("./imagesout/frame%d.jpg" % count, image, [int(cv2.IMWRITE_JPEG_QUALITY), self.JPGQuality])  # save frame as JPEG file
                 imageFileNameandPath =  ("./imagesout/frame%d.jpg" % count)
                 image_base64 = self.convertToBase64(imageFileNameandPath)
