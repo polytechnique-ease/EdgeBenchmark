@@ -1,9 +1,8 @@
-import imp
-import Videogenerator
-import DataSender 
+from Videogenerator import VideoGenerator
+from DataSender import DataSender
 
 dataSender = DataSender()
 folder = './imagesout'
 
-videoDataGenerator = Videogenerator(dataSender,"test","test","test",folder)
+videoDataGenerator = VideoGenerator(dataSender,"test",50,"10",folder)
 videoDataGenerator.generateData()
