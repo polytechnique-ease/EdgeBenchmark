@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-import DataSender
+from DataSender import DataSender
 
 class Idatagenerator(ABC):
 

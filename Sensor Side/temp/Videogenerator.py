@@ -1,11 +1,15 @@
-import Idatagenerator
-import os, cv2,json
-from datetime import *
+from Idatagenerator import Idatagenerator
+import os, cv2,json,base64
 import paho.mqtt.client as mqtt
+<<<<<<< HEAD
 
 class VideoGenerator(Idatagenerator):
 
+=======
+import time
+>>>>>>> b4ad9b9c37e23adcd272c5cbcdc8bfdefae31da3
 
+class VideoGenerator(Idatagenerator):
     def __init__(self, datasender,camera_id,JPGQuality,transmitdelay, folder):
         self.datasender = datasender
         self.camera_id = camera_id
@@ -22,13 +26,20 @@ class VideoGenerator(Idatagenerator):
                     os.unlink (file_path)
             except Exception as e:
                 print (e)
+    def convertToBase64(self,fileNameandPath):
+
+        with open(fileNameandPath, "rb") as imageFile:
+            str = base64.b64encode(imageFile.read())
+            print("***")
+            print(str)
+        return str
     def generateData(self):
+        vidcap = cv2.VideoCapture('black.mp4')
+        success, image = vidcap.read()
+        count = 0
+        success = True
 
-            vidcap = cv2.VideoCapture('black.mp4')
-            success, image = vidcap.read ()
-            count = 0
-            success = True
-
+<<<<<<< HEAD
             start = time.time ()
             print('JPGQuality:', self.JPGQuality)
             list_image_base64_str = ''
@@ -44,21 +55,44 @@ class VideoGenerator(Idatagenerator):
                 end = time.time()
                 runtime_seconds = end - start
                 list_image_base64_str += str(image_base64)+'XXX'
+=======
+        start = time.time()
+        print('JPGQuality:', self.JPGQuality)
+        list_image_base64_str = ''
+        while success:
+            #for i in range(9):
+            #self.JPGQuality = i + 1
+            cv2.imwrite("./imagesout/frame%d.jpg" % count, image, [int(cv2.IMWRITE_JPEG_QUALITY), self.JPGQuality])  # save frame as JPEG file
+            imageFileNameandPath =  ("./imagesout/frame%d.jpg" % count)
+            image_base64 = self.convertToBase64(imageFileNameandPath)
+            success, image = vidcap.read ()                
+            print ('Read a new frame: ', success)
+            
+            timestamp = str(time.time())
+            frame_id = timestamp+str(count)
+            end = time.time()
+            runtime_seconds = end - start
+            list_image_base64_str += str(image_base64)+'XXX'
+>>>>>>> b4ad9b9c37e23adcd272c5cbcdc8bfdefae31da3
 
-                jsondata = {}
-                jsondata['size'] =  os.stat(imageFileNameandPath).st_size
-                jsondata['camera_id'] =  self.camera_id
-                jsondata['transmitdelay'] =  self.transmitdelay
-                jsondata['JPGQuality'] =  self.JPGQuality
-                jsondata['count'] =  count
-                jsondata['frame_id'] = str(frame_id)
-                jsondata['FromSensor_time'] = timestamp
-                jsondata['value'] = str(image_base64)
-                jsondata['measurement_name'] = "cmode100_53"
-                self.datasender.sendData(jsondata)
+            jsondata = {}
+            jsondata['size'] =  os.stat(imageFileNameandPath).st_size
+            jsondata['camera_id'] =  self.camera_id
+            jsondata['transmitdelay'] =  self.transmitdelay
+            jsondata['JPGQuality'] =  self.JPGQuality
+            jsondata['count'] =  count
+            jsondata['frame_id'] = str(frame_id)
+            jsondata['FromSensor_time'] = timestamp
+            jsondata['value'] = str(image_base64)
+            jsondata['measurement_name'] = "cmode100_53"
+            self.datasender.sendData(jsondata)
 
-                print('Experiment Runtime (seconds): ' + str(int(runtime_seconds)))
-                print('Images written per (second): ' + str(count/runtime_seconds))
+            print('Experiment Runtime (seconds): ' + str(int(runtime_seconds)))
+            print('Images written per (second): ' + str(count/runtime_seconds))
 
 
+<<<<<<< HEAD
             self.cleanup()
+=======
+        self.cleanup()
+>>>>>>> b4ad9b9c37e23adcd272c5cbcdc8bfdefae31da3
