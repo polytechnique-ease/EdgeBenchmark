@@ -32,7 +32,6 @@ public class SaveRDD  implements VoidFunction2<JavaRDD<JSONObject>, Time>, Exter
             SaveRDD.dbManager = new InfluxDbManager();
             SaveRDD.dbManager.connect();
         }
-
     }
 
     @Override
