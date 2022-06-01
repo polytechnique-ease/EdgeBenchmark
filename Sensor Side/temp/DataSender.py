@@ -1,6 +1,8 @@
+import requests
 
 class DataSender:
 
     def sendData(self,json):
-        print(json)
+    	print(json)
+    	requests.post('http://localhost:8088', json)
         pass
