@@ -20,8 +20,8 @@ class BaseClientAdapter(BaseHTTPRequestHandler):
             headers=self.headers,
             environ={'REQUEST_METHOD': 'POST'}
         )
-        print(form.getvalue("foo"))
-        print(form.getvalue("bin"))
+        print(form.getvalue("value"))
+
 
 def run(server_class=HTTPServer, handler_class=BaseClientAdapter, port=8088):
     server_address = ('', port)
