@@ -25,7 +25,6 @@ class VideoGenerator(Idatagenerator):
         with open(fileNameandPath, "rb") as imageFile:
             str = base64.b64encode(imageFile.read())
             print("***")
-            print(str)
         return str
     def generateData(self):
         vidcap = cv2.VideoCapture('black.mp4')
