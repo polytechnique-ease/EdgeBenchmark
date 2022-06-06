@@ -20,13 +20,9 @@ class BaseClientAdapter(BaseHTTPRequestHandler):
             headers=self.headers,
             environ={'REQUEST_METHOD': 'POST'}
         )
-        print(form.getvalue("value"))
-
-
 def run(server_class=HTTPServer, handler_class=BaseClientAdapter, port=8088):
     server_address = ('', port)
     httpd = server_class(server_address, handler_class)
     print('Server running at localhost:8088...')
     httpd.serve_forever()
 
-run()
