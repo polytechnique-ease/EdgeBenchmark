@@ -175,8 +175,8 @@ class Camera():
                 jsondata['count'] =  count
                 jsondata['frame_id'] = str(frame_id)
                 jsondata['FromSensor_time'] = timestamp
-                jsondata['value'] = str(image_base64)
-                jsondata['measurement_name'] = "cmode100_53"
+                jsondata['value'] = image_base64
+                jsondata['measurement_name'] = "bruh"
                 cname = "Client" + str(count)
                 client = mqtt.Client(cname)
 
@@ -191,11 +191,11 @@ class Camera():
                 #client.publish(topic="topic", payload=str(count), qos=1, retain=False)
                 
                 #client.publish(topic="topic", payload=str(jsondata), qos=1, retain=False)
-
+                #print(jsondata)
                 client.publish(topic="topic", payload=json.dumps(jsondata), qos=1, retain=False)
                 #client.loop_forever()
                 client.loop_start()
-                time.sleep(1)
+                #time.sleep(5)
                 #list_image_base64_str = ''
                 #print(count)
                 count += 1
@@ -210,7 +210,7 @@ class Camera():
     def convertToBase64(self,fileNameandPath):
 
         with open(fileNameandPath, "rb") as imageFile:
-            str = base64.b64encode(imageFile.read())
+            str = base64.b64encode(imageFile.read()).decode("utf-8")
             print("***")
             print(str)
         return str
