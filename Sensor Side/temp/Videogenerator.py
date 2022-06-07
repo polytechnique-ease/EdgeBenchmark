@@ -23,7 +23,7 @@ class VideoGenerator(Idatagenerator):
     def convertToBase64(self,fileNameandPath):
 
         with open(fileNameandPath, "rb") as imageFile:
-            str = base64.b64encode(imageFile.read())
+            str = base64.b64encode(imageFile.read()).decode("utf-8")
             print("***")
         return str
     def generateData(self):
@@ -54,10 +54,10 @@ class VideoGenerator(Idatagenerator):
             jsondata['count'] =  count
             jsondata['frame_id'] = str(frame_id)
             jsondata['FromSensor_time'] = timestamp
-            jsondata['value'] = str(image_base64)
-            jsondata['measurement_name'] = "cmode100_53"
+            jsondata['value'] = image_base64
+            jsondata['measurement_name'] = "yoyo"
             self.datasender.sendData(jsondata)
-
+            print("hi")
             print('Experiment Runtime (seconds): ' + str(int(runtime_seconds)))
             print('Images written per (second): ' + str(count/runtime_seconds))
 
