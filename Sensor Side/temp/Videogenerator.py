@@ -55,7 +55,7 @@ class VideoGenerator(Idatagenerator):
             jsondata['frame_id'] = str(frame_id)
             jsondata['FromSensor_time'] = timestamp
             jsondata['value'] = image_base64
-            jsondata['measurement_name'] = "yoyo"
+            jsondata['measurement_name'] = "yoyo2machines"
             self.datasender.sendData(jsondata)
             print("hi")
             print('Experiment Runtime (seconds): ' + str(int(runtime_seconds)))
