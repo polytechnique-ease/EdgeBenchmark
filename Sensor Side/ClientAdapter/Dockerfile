@@ -10,10 +10,10 @@ RUN apt-get update && apt-get install -y build-essential \
     libgtk2.0-dev \
     && apt-get -y clean all \
     && rm -rf /var/lib/apt/lists/*
-COPY /requirements.txt /camera/requirements.txt
+COPY requirements.txt /pythonserver/requirements.txt
 RUN pip install -r requirements.txt
 
 COPY / /pythonserver
 
 
-ENTRYPOINT ["python3", "/pythonserver/main.py"]
+ENTRYPOINT ["python3", "/pythonserver/MQTTAdapter.py"]
