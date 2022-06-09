@@ -1,12 +1,8 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
-import json,logging,os,sys
+import json,logging,os
 import cgi
 import paho.mqtt.client as mqtt
-from dotenv import load_dotenv
 from functools import partial
-
-load_dotenv("sensor-variables.env")
-
 
 
 class Server(BaseHTTPRequestHandler):
