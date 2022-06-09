@@ -1,6 +1,5 @@
 from Idatagenerator import Idatagenerator
-import os, cv2,json,base64
-import paho.mqtt.client as mqtt
+import os, cv2,base64
 import time
 
 class VideoGenerator(Idatagenerator):
@@ -57,7 +56,6 @@ class VideoGenerator(Idatagenerator):
             jsondata['value'] = image_base64
             jsondata['measurement_name'] = "yoyo"
             self.datasender.sendData(jsondata)
-            print("hi")
             print('Experiment Runtime (seconds): ' + str(int(runtime_seconds)))
             print('Images written per (second): ' + str(count/runtime_seconds))
 
