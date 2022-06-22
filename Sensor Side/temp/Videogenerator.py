@@ -1,7 +1,7 @@
 from Idatagenerator import Idatagenerator
 import os, cv2,base64
 import time
-
+import random
 class VideoGenerator(Idatagenerator):
     def __init__(self, datasender,camera_id,JPGQuality,transmitdelay, folder):
         self.datasender = datasender
@@ -54,7 +54,8 @@ class VideoGenerator(Idatagenerator):
             jsondata['frame_id'] = str(frame_id)
             jsondata['FromSensor_time'] = timestamp
             jsondata['value'] = image_base64
-            jsondata['measurement_name'] = "yoyo2machines"
+            jsondata['measurement_name'] = "h_30_5_2w_2"
+            time.sleep(random.randint(1,5))
             self.datasender.sendData(jsondata)
             print('Experiment Runtime (seconds): ' + str(int(runtime_seconds)))
             print('Images written per (second): ' + str(count/runtime_seconds))
