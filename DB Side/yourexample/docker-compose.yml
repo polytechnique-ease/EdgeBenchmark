@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+# this service should always be here this is for collecting the measurements
+  influxdb_MSR:
+    image: influxdb:1.8.3
+    restart: always
+    ports:
+      - "8087:8086"
+    volumes:
+      - ./influxdb_MSR:/var/lib/influxdb
+# here you add the service for your database

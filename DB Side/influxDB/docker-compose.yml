@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  influxdb_MSR:
+    image: influxdb:1.8.3
+    restart: always
+    ports:
+      - "8087:8086"
+    volumes:
+      - ./influxdb_MSR:/var/lib/influxdb
+  influxdb_Log:
+    image: influxdb:latest
+    restart: always
+    ports:
+      - "8086:8086"
+    volumes:
+      - ./influxdb_Log:/var/lib/influxdb
+
+
+    
