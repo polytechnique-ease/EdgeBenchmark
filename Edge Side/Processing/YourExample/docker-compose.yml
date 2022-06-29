@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+#you can change mosquitto with anybroker you want but you need to create and adapter for it on the Sensor Side
+#now we only have an adapter for mosquitto
+  mosquitto:
+    image: eclipse-mosquitto:2.0.13
+    container_name: mosquitto
+    volumes:
+      - ./mosquitto.conf:/mosquitto.conf
+    restart: always
+    ports:
+      - "1883:1883"
+    command:  mosquitto -c /mosquitto.conf
+#you need to add other services for processing like spark containers 
