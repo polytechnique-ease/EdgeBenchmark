@@ -13,7 +13,7 @@ import json
 import requests
 
 
-load_dotenv("edge-variables.env")
+load_dotenv("monitoring-edge-variables.env")
 
 
 from influxdb import InfluxDBClient
@@ -84,9 +84,9 @@ class DockerMonitoring():
     def get_memory(self, data):
         
         if data['memory_stats']['usage'] is not None:
-            self.memory = int(data['memory_stats']['usage']) * 10**-9
+            self.memory = int(data['memory_stats']['usage'])
         if data['memory_stats']['limit'] is not None:
-            self.memory_limit = int(data['memory_stats']['limit'])* 10**-9
+            self.memory_limit = int(data['memory_stats']['limit'])
         return {'memory': self.memory, 'memory_limit': self.memory_limit, 'memory_percent': 100 * self.memory / self.memory_limit, 'memory_utilization' : self.memory/self.memory_limit * 100}
 
     def get_disk_io(self, data):
@@ -139,7 +139,7 @@ class DockerMonitoring():
                                   'net_tx': float(self.get_network_throughput(container_stats)['tx'])}
                 json_body = [
                               {
-                              "measurement": "e_87_10_92_12_m_1",
+                              "measurement": "a_85_1wor",
                               "tags": {
                               "container_name": name,
                               "short_id": cont.short_id
@@ -177,7 +177,7 @@ class DockerMonitoring():
         
         json_body = [
              {
-              "measurement": "e_87_10_92_12_m_1",
+              "measurement": "a_85_1wor",
                "tags": {
                 "host": "rpi",
                 "region": "us-west"

@@ -1,4 +1,3 @@
-#Spark worker
 FROM arm32v7/ubuntu
 ENV TZ=America/Toronto
 

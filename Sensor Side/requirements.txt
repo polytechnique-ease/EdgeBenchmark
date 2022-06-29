@@ -1,8 +1,0 @@
-flask
-redis
-opencv-contrib-python-headless
-pytz
-pymongo
-paho-mqtt
-influxdb
-python-dotenv
