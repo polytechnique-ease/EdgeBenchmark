@@ -5,4 +5,4 @@ services:
   app:
     build: .
     env_file:
-      - sensor-variables.env
+      - datagenerator-variables.env

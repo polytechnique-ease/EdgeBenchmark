@@ -1,7 +1,7 @@
-import requests
+import requests,os
 
 class DataSender:
 	def sendData(self,json):
 		print(json["count"])
-		requests.post('http://132.207.170.17:8088', json=json, headers = {'Content-type': 'application/json'})
+		requests.post('http://' + os.getenv('ClIENT_ADAPTER_IP') + ':' + os.getenv('ClIENT_ADAPTER_PORT'), json=json, headers = {'Content-type': 'application/json'})
 		pass
