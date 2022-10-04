@@ -38,9 +38,16 @@ public class SparkMain {
 			}
 			return null;
 		});
-		
+
+
 		JavaDStream<JSONObject> sensorDetailsStreamfiltered = sensorDetailsStream
-				.filter((JSONObject data) -> data.getInt("size") < 148000 && data.getInt("size") > 141000) ;
+				.filter((JSONObject data) -> {
+					if (data.getString("type").equals("camera") ){
+						return data.getInt("size") < 148000 && data.getInt("size") > 141000;
+					} else {
+						return true;
+					}
+				}) ;
 
 		sensorDetailsStreamfiltered.foreachRDD(new SaveRDD());
 

@@ -3,6 +3,7 @@ import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.Tag;
 import models.SensorData;
+import models.TemperatureData;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.VoidFunction;
 import org.apache.spark.api.java.function.VoidFunction2;
@@ -17,13 +18,12 @@ import java.util.UUID;
 
 
 import com.drew.imaging.ImageProcessingException;
-import com.drew.imaging.jpeg.JpegMetadataReader;
 import com.drew.imaging.ImageMetadataReader;
 
 import javax.imageio.ImageIO;
 
 
-public class SaveRDD  implements VoidFunction2<JavaRDD<JSONObject>, Time>, Externalizable {
+public class SaveRDD implements VoidFunction2<JavaRDD<JSONObject>, Time>, Externalizable {
 
     private static DbManager dbManager ;
 
@@ -38,31 +38,45 @@ public class SaveRDD  implements VoidFunction2<JavaRDD<JSONObject>, Time>, Exter
     public void call(JavaRDD<JSONObject> rdd, Time time) throws Exception {
         String beforesparktime = time.toString() ;
 
-        rdd.foreach(new VoidFunction<JSONObject>() {
-
-            @Override
-            public void call(JSONObject data) throws Exception {
-                System.out.println("-------------------------------------------");
-                System.out.println("Time " + beforesparktime +":");
-                System.out.println("-------------------------------------------");
-                System.out.println(" Saving data of frame id :" + data.getString("frame_id") );
-
-
-                SensorData sensorData = new SensorData(
-                        data.getString("measurement_name"),
-                        data.getString("camera_id"),
-                        beforesparktime,
-                        data.getString("frame_id"),
-                        data.getString("FromSensor_time"),
-                        data.getString("value"),
-                        data.getString("transmitdelay"),
-                        data.getString("JPGQuality")
-                );
-                extractInfos(data.getString("value"),data.getString("count"));
-                SaveRDD.dbManager.save(sensorData);
+        rdd.foreach( data -> {
+            if (data.getString("type").equals("temperature") ){
+                saveTemperatureData(data);
+            }else {
+                saveCameraData(data,beforesparktime);
             }
         });
 
+    }
+    private void saveCameraData(JSONObject data,String beforesparktime) {
+        System.out.println("-------------------------------------------");
+        System.out.println("Time " + beforesparktime +":");
+        System.out.println("-------------------------------------------");
+        System.out.println(" Saving data of frame id :" + data.getString("frame_id") );
+
+
+        SensorData sensorData = new SensorData(
+                data.getString("measurement_name"),
+                data.getString("camera_id"),
+                beforesparktime,
+                data.getString("frame_id"),
+                data.getString("FromSensor_time"),
+                data.getString("value"),
+                data.getString("transmitdelay"),
+                data.getString("JPGQuality")
+        );
+        extractInfos(data.getString("value"),data.getString("count"));
+        SaveRDD.dbManager.save(sensorData);
+    }
+
+    private void saveTemperatureData(JSONObject object) {
+        TemperatureData temperatureData = new TemperatureData(
+                object.getString("id"),
+                object.getString("temp"),
+                object.getString("lux"),
+                object.getString("timestamp"),
+                object.getString("daydate")
+        );
+        SaveRDD.dbManager.save(temperatureData);
     }
 
     public void extractInfos(String image,String count){
