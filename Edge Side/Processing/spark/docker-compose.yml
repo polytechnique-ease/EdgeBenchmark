@@ -10,22 +10,22 @@ services:
     ports:
       - "1883:1883"
     command:  mosquitto -c /mosquitto.conf
-  sparkmaster: 
-    image: mahsahadian/spark-master
+  sparkmaster:
+    build: ./spark-master
     container_name: sparkmaster
     restart: always
     ports:
       - "8080:8080"
       - "7077:7077"
-  sparkworker: 
-    image: mahsahadian/spark-worker
+  sparkworker:
+    build: ./spark-worker
     restart: always
     depends_on:
       - sparkmaster
     env_file:
       - spark-edge-variables.env
-  sparkjob: 
-    image: mahsahadian/spark-job
+  sparkjob:
+    build: ./spark-job
     container_name: sparkjob
     depends_on:
       - sparkmaster
