@@ -20,6 +20,6 @@ RUN export PATH=$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin
 RUN export PYSPARK_PYTHON=/usr/bin/python3
 
 RUN . ~/.profile
-RUN apt install maven
+RUN apt install maven -y
 ENV PATH $PATH:/opt/spark/bin:/opt/spark/sbin
 ENTRYPOINT start-master.sh && tail -f /dev/null
