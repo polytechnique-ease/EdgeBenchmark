@@ -18,9 +18,9 @@ load_dotenv("monitoring-edge-variables.env")
 
 from influxdb import InfluxDBClient
 
-client = InfluxDBClient(os.getenv('INFLUXDB_IP'), os.getenv('INFLUXDB_PORT'), os.getenv('TARGET_DATABASE_USERNAME'), os.getenv('TARGET_DATABASE_PASSWORD'), os.getenv('TARGET_DATABASE_NAME'))
+client = InfluxDBClient(host='132.207.170.25', port=8085, username='mahsa', password='korosh25', database='monitoring')
 
-#client.create_database(dbname)
+#client.create_database('monitoring')
 
 
 from datetime import date

@@ -11,4 +11,4 @@ RUN pip3 install docker influxdb pytz python-dotenv
 
 
 COPY monitoring.py /monitoring.py
-ENTRYPOINT python3 /monitoring.py && tail -f /dev/null
+ENTRYPOINT python3 /monitoring.py

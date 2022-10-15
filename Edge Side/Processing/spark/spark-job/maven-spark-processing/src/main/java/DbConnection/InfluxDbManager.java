@@ -60,7 +60,7 @@ public class InfluxDbManager implements DbManager {
     @Override
     public void save(TemperatureData data) {
 
-        Point point = Point.measurement("temperature").addTag("sensor_id", data.getId())
+        Point point = Point.measurement(data.getMeasurementName()).addTag("sensor_id", data.getId())
 
                 .addField("beforeInfluxDB", String.valueOf(Timestamp.from(Instant.now())))
                 .addField("temp", data.getTemp())

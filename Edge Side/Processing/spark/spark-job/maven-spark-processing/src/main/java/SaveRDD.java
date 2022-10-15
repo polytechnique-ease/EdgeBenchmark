@@ -74,7 +74,8 @@ public class SaveRDD implements VoidFunction2<JavaRDD<JSONObject>, Time>, Extern
                 object.getString("temp"),
                 object.getString("lux"),
                 object.getString("timestamp"),
-                object.getString("daydate")
+                object.getString("daydate"),
+                object.getString("measurement_name")
         );
         SaveRDD.dbManager.save(temperatureData);
     }

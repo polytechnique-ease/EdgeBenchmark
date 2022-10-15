@@ -7,4 +7,4 @@ COPY / /app
 RUN apk add --update g++ && \
     rm /var/cache/apk/*
 RUN gcc -o sensorapp main.c
-CMD ./sensorapp $ClIENT_ADAPTER_IP $ClIENT_ADAPTER_PORT $NUM_MSG $SENSOR_ID $DELAY
+CMD ./sensorapp $ClIENT_ADAPTER_IP $ClIENT_ADAPTER_PORT $NUM_MSG $SENSOR_ID $DELAY $MEASUREMENT_NAME

@@ -6,13 +6,19 @@ public class TemperatureData {
     String lux;
     String timestamp;
     String daydate;
+    String measurementName;
 
-    public TemperatureData(String id, String temp, String lux, String timestamp, String daydate) {
+    public TemperatureData(String id, String temp, String lux, String timestamp, String daydate, String measurementName) {
         this.id = id;
         this.temp = temp;
         this.lux = lux;
         this.timestamp = timestamp;
         this.daydate = daydate;
+        this.measurementName = measurementName;
+    }
+
+    public String getMeasurementName() {
+        return measurementName;
     }
 
     public String getId() {

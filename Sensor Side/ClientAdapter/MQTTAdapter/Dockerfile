@@ -16,4 +16,4 @@ RUN pip install -r requirements.txt
 COPY / /pythonserver
 
 
-ENTRYPOINT ["python3", "/pythonserver/MQTTAdapter.py"]
+ENTRYPOINT ["python3","-u","/pythonserver/MQTTAdapter.py"]
